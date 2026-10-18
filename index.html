@@ -2,18 +2,20 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- 브라우저 타이틀 -->
     <title>신나는 윷놀이</title>
     <meta name="description" content="다운로드 없이 인터넷 창에서 바로 즐기는 무료 전통 윷놀이! 2~4팀 대결, 공식 경기 규칙, 모바일/태블릿 터치 드래그 지원.">
-    <meta name="keywords" content="윷놀이, 온라인 윷놀이, 무료 윷놀이, 민속놀이, 신나는 윷놀이, 윷놀이 게임">
+    <meta name="keywords" content="윷놀이, 무료 윷놀이, 웹 윷놀이, 온라인 윷놀이, 윷놀이 게임, 신나는 윷놀이, 전통 윷놀이, 명절 게임">
     <meta name="robots" content="index, follow">
 
-    <!-- 3. 카카오톡/SNS 공유 시 예쁘게 카드 형태로 뜨게 하는 Open Graph 태그 -->
+    <!-- 카카오톡 및 SNS 공유용 오픈그래프 -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="신나는 윷놀이">
-    <meta property="og:description" content="다운로드 없이 웹에서 바로 즐기는 2~4팀 전통 윷놀이 게임">
+    <meta property="og:description" content="다운로드 없이 브라우저에서 바로 즐기는 2~4팀 전통 윷놀이 게임에 초대합니다!">
     <meta property="og:url" content="https://v1520152v.github.io/yut/">
+
     <style>
         :root {
             --bg-color: #ffffff;
@@ -27,7 +29,6 @@
             
             --title-color: #5e4a3c;
             
-            /* 팀 컬러 (오렌지, 블루, 그린, 옐로우) */
             --team-0: #eb6d46;
             --team-0-shadow: #be4d2a;
             --team-1: #5a8df2;
@@ -37,7 +38,6 @@
             --team-3: #f2ab38;
             --team-3-shadow: #c78318;
             
-            /* 팀 색상과 겹치지 않는 중후한 옻칠 우드 브라운 */
             --throw-btn-bg: #54361c;
             --throw-btn-shadow: #331f0e;
 
@@ -54,7 +54,7 @@
 
         body {
             margin: 0;
-            padding: 10px 15px;
+            padding: 8px 10px;
             background-color: var(--bg-color);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
             display: flex;
@@ -68,27 +68,27 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
         h1 {
             margin: 0;
             color: var(--title-color);
-            font-size: 32px;
+            font-size: clamp(24px, 6vw, 32px);
             font-weight: 900;
             letter-spacing: 1px;
         }
 
         .cloud-deco {
-            width: 60px;
-            height: 28px;
+            width: clamp(40px, 9vw, 60px);
+            height: clamp(18px, 4.5vw, 28px);
         }
 
         #setup-screen {
             background: #fdfbf7;
-            padding: 35px 30px;
-            border-radius: 24px;
+            padding: 30px 22px;
+            border-radius: 22px;
             box-shadow: 0 8px 25px rgba(122, 108, 93, 0.12);
             text-align: center;
             border: 3px solid var(--board-frame);
@@ -98,9 +98,9 @@
         }
 
         #setup-screen h2 {
-            font-size: 22px;
+            font-size: clamp(19px, 5vw, 22px);
             color: var(--title-color);
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             font-weight: 800;
         }
 
@@ -108,8 +108,8 @@
             background: var(--title-color);
             color: white;
             border: none;
-            padding: 13px 25px;
-            font-size: 18px;
+            padding: 12px 22px;
+            font-size: 17px;
             border-radius: 14px;
             cursor: pointer;
             font-weight: bold;
@@ -126,10 +126,21 @@
             transform: scale(0.98);
         }
 
-        /* 팀 색상과 절대 겹치지 않는 윷 던지기 버튼 */
+        .btn-invite {
+            background: #2d8a4e;
+            font-size: 15px;
+            padding: 10px 18px;
+            margin-top: 10px;
+            box-shadow: 0 3px 8px rgba(45, 138, 78, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
         .btn-large {
-            font-size: 21px;
-            padding: 13px 24px;
+            font-size: clamp(18px, 4.8vw, 21px);
+            padding: 12px 20px;
             background: var(--throw-btn-bg);
             box-shadow: 0 4px 0 var(--throw-btn-shadow);
             color: #fff;
@@ -137,7 +148,7 @@
             border-radius: 14px;
             cursor: pointer;
             font-weight: 900;
-            margin-top: 8px;
+            margin-top: 6px;
             width: 100%;
             letter-spacing: 0.5px;
             transition: all 0.1s ease;
@@ -169,29 +180,33 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: flex-start;
-            gap: 25px;
+            gap: 20px;
             width: 100%;
         }
 
+        /* 반응형 유동 말판 래퍼 */
         #board-wrapper {
             background: #ffffff;
-            padding: 12px;
+            padding: clamp(6px, 2vw, 12px);
             border-radius: 20px;
             box-shadow: 0 8px 25px rgba(122, 108, 93, 0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            max-width: 100%;
+            margin-bottom: 50px; /* 결승선 공간 확보 */
         }
 
+        /* 화면 폭에 맞춰 1:1 정사각형으로 자동 축소/확대 */
         #board-container {
             position: relative;
-            width: 470px;
-            height: 470px;
+            width: min(92vw, 470px);
+            height: min(92vw, 470px);
             background: var(--board-bg);
-            border: 10px solid var(--board-frame);
+            border: clamp(6px, 1.8vw, 10px) solid var(--board-frame);
             outline: 2px solid var(--board-inner-line);
-            outline-offset: -6px;
+            outline-offset: -5px;
             border-radius: 14px;
             touch-action: none;
         }
@@ -205,10 +220,11 @@
             pointer-events: none;
         }
 
+        /* 유동적 크기의 말판 노드 */
         .node {
             position: absolute;
-            width: 28px;
-            height: 28px;
+            width: clamp(20px, 5.8vw, 28px);
+            height: clamp(20px, 5.8vw, 28px);
             background: var(--node-small);
             border-radius: 50%;
             transform: translate(-50%, -50%);
@@ -217,28 +233,27 @@
             z-index: 2;
         }
 
-        /* 터치 및 드롭 감지용 투명 히트박스 확장 (직경 62px) */
         .node::before {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 62px;
-            height: 62px;
+            width: clamp(48px, 12vw, 62px);
+            height: clamp(48px, 12vw, 62px);
             border-radius: 50%;
             pointer-events: auto;
         }
 
         .node.corner, .node.center {
-            width: 44px;
-            height: 44px;
+            width: clamp(32px, 9vw, 44px);
+            height: clamp(32px, 9vw, 44px);
             background: var(--node-large);
         }
 
         .node.corner::before, .node.center::before {
-            width: 72px;
-            height: 72px;
+            width: clamp(58px, 14vw, 72px);
+            height: clamp(58px, 14vw, 72px);
         }
 
         .node-label {
@@ -251,7 +266,7 @@
             align-items: center;
             justify-content: center;
             font-weight: 500;
-            font-size: 11px;
+            font-size: clamp(9px, 2.5vw, 11px);
             color: rgba(255, 255, 255, 0.9);
             pointer-events: none;
             user-select: none;
@@ -260,19 +275,19 @@
         .node.corner .node-label,
         .node.center .node-label {
             font-weight: 600;
-            font-size: 13px;
+            font-size: clamp(11px, 3vw, 13px);
         }
 
         .finish-zone {
             position: absolute;
-            bottom: -50px;
-            right: 8px;
+            bottom: -45px;
+            right: 6px;
             background: #52b77a;
             color: white;
-            padding: 7px 16px;
-            border-radius: 18px;
+            padding: 6px 14px;
+            border-radius: 16px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: clamp(12px, 3.2vw, 14px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: all 0.2s;
             z-index: 5;
@@ -282,11 +297,11 @@
         .finish-zone::before {
             content: '';
             position: absolute;
-            top: -15px;
-            left: -15px;
-            right: -15px;
-            bottom: -15px;
-            border-radius: 25px;
+            top: -12px;
+            left: -12px;
+            right: -12px;
+            bottom: -12px;
+            border-radius: 20px;
             pointer-events: auto;
         }
 
@@ -294,21 +309,23 @@
         .node.droppable-target {
             background: #ffd15c !important;
             box-shadow: 0 0 16px #ea580c;
-            transform: translate(-50%, -50%) scale(1.25);
+            transform: translate(-50%, -50%) scale(1.22);
             z-index: 10;
         }
 
         .finish-zone.droppable-target {
             color: #000 !important;
-            transform: scale(1.08);
+            transform: scale(1.06);
         }
 
+        /* 우측(모바일에서는 하단) 조작 패널 */
         #control-panel {
             flex: 1;
-            min-width: 340px;
-            max-width: 420px;
+            min-width: 280px;
+            max-width: 470px;
+            width: 100%;
             background: #fdfbf7;
-            padding: 16px 20px;
+            padding: 14px 16px;
             border-radius: 18px;
             border: 3px solid var(--board-frame);
             display: flex;
@@ -318,27 +335,28 @@
         }
 
         #turn-info {
-            font-size: 20px;
+            font-size: clamp(17px, 4.5vw, 20px);
             font-weight: 900;
-            margin-bottom: 10px;
-            padding: 8px 20px;
-            border-radius: 25px;
+            margin-bottom: 8px;
+            padding: 7px 16px;
+            border-radius: 22px;
             color: white;
             background: var(--team-0);
             width: 100%;
             text-align: center;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             box-shadow: 0 3px 8px rgba(0,0,0,0.06);
         }
 
         #yut-display-area {
             width: 100%;
-            height: 220px;
+            min-height: 200px;
+            height: auto;
             background: #ffffff;
             border: 2px solid var(--board-frame);
             border-radius: 16px;
-            padding: 10px 14px;
-            margin-bottom: 10px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -347,17 +365,17 @@
 
         .yut-sticks {
             display: flex;
-            gap: 12px;
-            min-height: 110px;
+            gap: clamp(8px, 2.5vw, 12px);
+            min-height: 100px;
             perspective: 600px;
             align-items: center;
             justify-content: center;
         }
 
         .yut-stick {
-            width: 40px;
-            height: 108px;
-            border-radius: 15px;
+            width: clamp(34px, 8.5vw, 40px);
+            height: clamp(92px, 23vw, 108px);
+            border-radius: 14px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -375,7 +393,7 @@
 
         .yut-stick.round .x-mark {
             color: var(--yut-mark);
-            font-size: 15px;
+            font-size: clamp(13px, 3.5vw, 15px);
             line-height: 1;
             font-weight: 900;
         }
@@ -386,8 +404,8 @@
         }
 
         .black-dot {
-            width: 14px;
-            height: 14px;
+            width: clamp(11px, 2.8vw, 14px);
+            height: clamp(11px, 2.8vw, 14px);
             background-color: #222;
             border-radius: 50%;
             box-shadow: 0 1px 2px rgba(0,0,0,0.3);
@@ -405,10 +423,10 @@
         .yut-stick.spin-4 { animation: spinYutIndividual 0.55s ease-in-out; }
 
         #result-text {
-            font-size: 26px;
+            font-size: clamp(22px, 5.5vw, 26px);
             font-weight: 900;
             color: #222222;
-            height: 32px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -416,7 +434,7 @@
 
         #pending-moves-container {
             width: 100%;
-            height: 46px;
+            min-height: 44px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -446,7 +464,7 @@
         }
 
         .move-chip {
-            padding: 4px 12px;
+            padding: 4px 11px;
             background: #ffffff;
             border: 2px solid var(--board-inner-line);
             border-radius: 16px;
@@ -461,22 +479,22 @@
             background: var(--title-color);
             color: #ffffff;
             border-color: var(--title-color);
-            transform: scale(1.06);
+            transform: scale(1.05);
         }
 
         #piece-wait-area {
             width: 100%;
             background: #ffffff;
-            padding: 14px 16px;
+            padding: 12px 14px;
             border-radius: 16px;
             border: 2px solid var(--board-frame);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         #piece-wait-area h4 {
-            margin: 0 0 10px 0;
+            margin: 0 0 8px 0;
             color: var(--title-color);
-            font-size: 13px;
+            font-size: 12.5px;
             text-align: center;
             font-weight: 800;
         }
@@ -485,38 +503,37 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .team-pieces:last-child {
             margin-bottom: 0;
         }
 
-        /* 1팀 (0/4 완주) 텍스트 크기 확대 */
         .team-label {
             font-weight: 900;
-            font-size: 15.5px;
+            font-size: clamp(14px, 3.8vw, 15.5px);
             color: #3a2e25;
-            min-width: 140px;
+            min-width: 120px;
             letter-spacing: -0.2px;
         }
 
         .pieces-list {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
         .piece {
-            width: 36px;
-            height: 36px;
+            width: clamp(32px, 8.5vw, 36px);
+            height: clamp(32px, 8.5vw, 36px);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 900;
             color: white;
-            font-size: 15px;
+            font-size: clamp(13px, 3.8vw, 15px);
             cursor: grab;
             position: relative;
             touch-action: none;
@@ -538,21 +555,21 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 34px;
-            height: 34px;
-            font-size: 14px;
+            width: clamp(24px, 6.5vw, 34px);
+            height: clamp(24px, 6.5vw, 34px);
+            font-size: clamp(11px, 3vw, 14px);
             z-index: 3;
         }
 
         .stack-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
+            top: -4px;
+            right: -4px;
             background: #333;
             color: #fff;
             font-size: 10px;
-            width: 17px;
-            height: 17px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -561,11 +578,10 @@
             font-weight: 900;
         }
 
-        /* 패드/모바일 손 터치 드래그 시 손가락을 따라다니는 고스트 아바타 */
         #touch-drag-avatar {
             position: fixed;
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             color: white;
             font-weight: 900;
@@ -585,12 +601,12 @@
             top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(45, 36, 30, 0.9);
+            background: rgba(45, 36, 30, 0.92);
             backdrop-filter: blur(4px);
             color: #fff;
-            padding: 16px 28px;
+            padding: 14px 22px;
             border-radius: 18px;
-            font-size: 18px;
+            font-size: clamp(15px, 4vw, 18px);
             font-weight: 800;
             box-shadow: 0 8px 25px rgba(0,0,0,0.25);
             z-index: 100;
@@ -600,9 +616,10 @@
             border: 2px solid #ffd15c;
             white-space: pre-line;
             line-height: 1.45;
+            max-width: 90vw;
         }
 
-        #game-over-modal {
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -618,11 +635,11 @@
         .modal-box {
             background: #ffffff;
             border: 4px solid var(--board-frame);
-            border-radius: 24px;
-            padding: 28px 24px;
+            border-radius: 22px;
+            padding: 24px 20px;
             text-align: center;
-            max-width: 430px;
-            width: 90%;
+            max-width: 420px;
+            width: 92%;
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             animation: popIn 0.3s ease-out;
         }
@@ -633,15 +650,15 @@
         }
 
         .modal-title {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 900;
             margin-bottom: 8px;
         }
 
         .modal-desc {
-            font-size: 15px;
+            font-size: 14px;
             color: #666;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             line-height: 1.4;
         }
 
@@ -649,18 +666,18 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .rank-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 16px;
+            padding: 9px 14px;
             border-radius: 14px;
             background: #fdfbf7;
             border: 2px solid var(--board-frame);
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
         }
 
@@ -672,9 +689,9 @@
 
         .rank-team-tag {
             color: white;
-            padding: 4px 12px;
+            padding: 4px 11px;
             border-radius: 20px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 900;
         }
 
@@ -690,6 +707,30 @@
         }
         .btn-setup {
             background: var(--title-color);
+        }
+
+        .invite-card {
+            background: #fdfaf5;
+            border: 2px dashed #cfc2af;
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 16px;
+            text-align: left;
+            font-size: 13.5px;
+            color: #444;
+            line-height: 1.55;
+        }
+
+        .invite-url-box {
+            font-family: monospace;
+            background: #fff;
+            padding: 7px 9px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-top: 8px;
+            color: #1a56db;
+            word-break: break-all;
+            font-size: 12.5px;
         }
     </style>
 </head>
@@ -709,15 +750,18 @@
         </svg>
     </div>
 
+    <!-- 팀 선택 화면 -->
     <div id="setup-screen">
         <h2>참여할 팀 수를 선택하세요</h2>
         <div>
             <button class="btn" onclick="selectTeams(2)">2개 팀</button>
             <button class="btn" onclick="selectTeams(3)">3개 팀</button>
             <button class="btn" onclick="selectTeams(4)">4개 팀</button>
+            <button class="btn btn-invite" onclick="openInviteModal()">💌 친구에게 초대장 보내기</button>
         </div>
     </div>
 
+    <!-- 인게임 메인 화면 -->
     <div id="game-container">
         <div id="toast-popup"></div>
         <div id="touch-drag-avatar"></div>
@@ -725,7 +769,7 @@
         <div class="game-layout">
             <div id="board-wrapper">
                 <div id="board-container">
-                    <svg id="board-svg"></svg>
+                    <svg id="board-svg" viewBox="0 0 450 450"></svg>
                     <div id="finish-zone" class="finish-zone">🏁 완주 결승선</div>
                 </div>
             </div>
@@ -735,7 +779,6 @@
 
                 <div id="yut-display-area">
                     <div class="yut-sticks" id="yut-sticks">
-                        <!-- 1번 가락은 항상 점이 그려진 빽도 가락 -->
                         <div class="yut-stick flat"><div class="black-dot"></div></div>
                         <div class="yut-stick flat"></div>
                         <div class="yut-stick round"><span class="x-mark">✕</span><span class="x-mark">✕</span><span class="x-mark">✕</span></div>
@@ -757,11 +800,13 @@
                 </div>
 
                 <button class="btn btn-large" id="throw-btn" onclick="throwYut()">윷 던지기 🎲</button>
+                <button class="btn btn-invite" style="margin-top: 8px;" onclick="openInviteModal()">💌 친구 초대하기</button>
             </div>
         </div>
     </div>
 
-    <div id="game-over-modal" style="display: none;">
+    <!-- 순위 발표 모달 -->
+    <div id="game-over-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <div class="modal-title" id="winner-title">🎉 순위 발표 🎉</div>
             <div class="modal-desc" id="winner-desc">경기 결과가 확정되었습니다!</div>
@@ -774,10 +819,71 @@
         </div>
     </div>
 
+    <!-- 초대장 모달 -->
+    <div id="invite-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <div class="modal-title" style="color: var(--title-color);">💌 윷놀이 게임 초대장</div>
+            <div class="modal-desc">친구들과 가족을 초대해서 함께 윷놀이를 즐겨보세요!</div>
+            
+            <div class="invite-card">
+                🎲 <strong>신나는 전통 윷놀이에 초대합니다!</strong><br>
+                다운로드나 설치 없이 스마트폰, 태블릿, PC 인터넷 창에서 바로 함께 플레이할 수 있습니다.
+                <div class="invite-url-box">https://v1520152v.github.io/yut/</div>
+            </div>
+
+            <button class="btn btn-invite" style="width: 100%; margin-bottom: 8px;" onclick="copyInviteMessage()">📋 초대 문구 & 링크 복사하기</button>
+            <button class="btn" style="background: #e69138; width: 100%; margin-bottom: 8px;" onclick="shareNative()">📲 카톡 / 메신저로 공유하기</button>
+            <button class="btn btn-setup" style="width: 100%;" onclick="closeInviteModal()">닫기</button>
+        </div>
+    </div>
+
     <script>
         let audioCtx = null;
         const teamColors = ['#eb6d46', '#5a8df2', '#52b77a', '#f2ab38'];
         const teamNames = ['1팀', '2팀', '3팀', '4팀'];
+
+        const GAME_INVITE_URL = 'https://v1520152v.github.io/yut/';
+        const GAME_INVITE_TEXT = `🎲 신나는 전통 윷놀이에 초대합니다!\n다운로드 없이 인터넷 창에서 바로 2~4팀 대결을 즐겨보세요!\n👉 게임하러 가기: ${GAME_INVITE_URL}`;
+
+        function openInviteModal() {
+            document.getElementById('invite-modal').style.display = 'flex';
+        }
+
+        function closeInviteModal() {
+            document.getElementById('invite-modal').style.display = 'none';
+        }
+
+        function copyInviteMessage() {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(GAME_INVITE_TEXT).then(() => {
+                    showToast('📋 초대 문구와 링크가 복사되었습니다!\n원하는 채팅방에 붙여넣기하세요.');
+                }).catch(() => fallbackCopy());
+            } else {
+                fallbackCopy();
+            }
+        }
+
+        function fallbackCopy() {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = GAME_INVITE_TEXT;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast('📋 초대 문구와 링크가 복사되었습니다!');
+        }
+
+        function shareNative() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '신나는 윷놀이',
+                    text: '다운로드 없이 웹에서 바로 즐기는 무료 전통 윷놀이에 초대합니다!',
+                    url: GAME_INVITE_URL
+                }).catch(() => {});
+            } else {
+                copyInviteMessage();
+            }
+        }
 
         function showToast(msg) {
             const toast = document.getElementById('toast-popup');
@@ -875,6 +981,7 @@
         let remainingThrows = 1;
         let teamRankings = [];
 
+        // 450x450 기준 대칭 좌표 (반응형 % 계산용 기준)
         const nodePositions = [
             {x: 420, y: 420}, {x: 420, y: 342}, {x: 420, y: 264}, {x: 420, y: 186}, {x: 420, y: 108},
             {x: 420, y: 30},  {x: 342, y: 30},  {x: 264, y: 30},  {x: 186, y: 30},  {x: 108, y: 30},
@@ -889,6 +996,7 @@
         function drawBoardLines() {
             const svg = document.getElementById('board-svg');
             if (!svg) return;
+            svg.setAttribute('viewBox', '0 0 450 450');
             svg.innerHTML = '';
 
             const lines = [
@@ -914,6 +1022,7 @@
 
         function initGame() {
             document.getElementById('game-over-modal').style.display = 'none';
+            document.getElementById('invite-modal').style.display = 'none';
             const board = document.getElementById('board-container');
             document.querySelectorAll('.node').forEach(n => n.remove());
 
@@ -922,13 +1031,14 @@
             board.ondragover = (e) => e.preventDefault();
             board.ondrop = (e) => onBoardContainerDrop(e);
 
+            // 유동적 백분율(%) 좌표 배치
             nodePositions.forEach((pos, idx) => {
                 const node = document.createElement('div');
                 node.className = 'node';
                 if (idx === 0 || idx === 5 || idx === 10 || idx === 15) node.classList.add('corner');
                 if (idx === 24) node.classList.add('center');
-                node.style.left = pos.x + 'px';
-                node.style.top = pos.y + 'px';
+                node.style.left = ((pos.x / 450) * 100) + '%';
+                node.style.top = ((pos.y / 450) * 100) + '%';
                 node.id = `node-${idx}`;
 
                 const label = document.createElement('span');
@@ -987,12 +1097,12 @@
             renderPendingChips();
         }
 
-        // 터치 및 마우스 드롭 좌표를 기준 삼아 가장 가까운 유효 타깃 자동 탐색
+        // 반응형 화면 크기에 맞춰 정규화된 좌표 탐색
         function findClosestTargetFromCoords(clientX, clientY) {
             const board = document.getElementById('board-container');
             const rect = board.getBoundingClientRect();
-            const dropX = clientX - rect.left;
-            const dropY = clientY - rect.top;
+            const dropX = ((clientX - rect.left) / rect.width) * 450;
+            const dropY = ((clientY - rect.top) / rect.height) * 450;
 
             if (!draggedPieceGroup || draggedPieceGroup.length === 0) return -1;
 
@@ -1012,8 +1122,8 @@
                     const fZone = document.getElementById('finish-zone');
                     if (fZone) {
                         const fRect = fZone.getBoundingClientRect();
-                        const fCenterX = fRect.left + fRect.width / 2 - rect.left;
-                        const fCenterY = fRect.top + fRect.height / 2 - rect.top;
+                        const fCenterX = ((fRect.left + fRect.width / 2 - rect.left) / rect.width) * 450;
+                        const fCenterY = ((fRect.top + fRect.height / 2 - rect.top) / rect.height) * 450;
                         const dist = Math.hypot(fCenterX - dropX, fCenterY - dropY);
                         if (dist < minDistance + 25) {
                             minDistance = dist;
@@ -1054,6 +1164,7 @@
 
         function backToTeamSelect() {
             document.getElementById('game-over-modal').style.display = 'none';
+            document.getElementById('invite-modal').style.display = 'none';
             document.getElementById('game-container').style.display = 'none';
             document.getElementById('setup-screen').style.display = 'block';
         }
@@ -1075,7 +1186,6 @@
             }
         }
 
-        // 민속 표준 비율(배 55%) 및 1번 빽도 가락 영구 반영
         function throwYut() {
             const throwBtn = document.getElementById('throw-btn');
             if (isThrowing || remainingThrows <= 0) return;
@@ -1097,20 +1207,17 @@
                 let flatCount = 0;
                 let stickStates = [];
 
-                // 4개의 윷가락 던지기 (표준 평면 확률 55%)
                 for (let i = 0; i < 4; i++) {
                     const isFlat = Math.random() < 0.55;
                     stickStates.push(isFlat);
                     if (isFlat) flatCount++;
                 }
 
-                // 1번 가락(i===0)은 언제나 빽도 표식 가락
                 const isBackDoStickFlat = stickStates[0];
                 let isBackDo = false;
                 let moveVal = 0;
                 let resultName = '';
 
-                // 배(flat)가 1개 나왔는데 그것이 1번(점 박힌 빽도 가락)이면 빽도!
                 if (flatCount === 1 && isBackDoStickFlat) {
                     isBackDo = true;
                     moveVal = -1;
@@ -1132,7 +1239,6 @@
                     resultName = '모 (+5)';
                 }
 
-                // 윷가락 그래픽 구성 (1번 가락이 flat일 때 언제나 점이 보임)
                 let sticksHTML = '';
                 for (let i = 0; i < 4; i++) {
                     if (stickStates[i]) {
@@ -1636,9 +1742,7 @@
             passToNextTurn();
         }
 
-        // 터치 드래그 리스너 바인딩 (패드/스마트폰 터치 지원)
         function bindPieceEvents(pEl, piece) {
-            // 데스크톱 마우스 드래그 & 클릭
             pEl.draggable = true;
             pEl.ondragstart = (e) => onDragStart(e, piece);
             pEl.onclick = (e) => {
@@ -1646,7 +1750,6 @@
                 onPieceClick(piece);
             };
 
-            // 태블릿/패드 터치 드래그 앤 드롭
             pEl.addEventListener('touchstart', (e) => {
                 if (pendingMoves.length === 0 || piece.team !== currentTurn) {
                     onPieceClick(piece);
