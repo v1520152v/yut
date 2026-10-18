@@ -62,15 +62,15 @@
             overflow-x: hidden;
         }
 
-        /* 상단 헤더: 타이틀 중앙, 초대장 버튼 우측 끝(1팀 차례 위) */
+        /* 상단 헤더: 아래 게임 박스 너비(928px)와 일치시켜 오른쪽 끝라인을 완벽 정렬 */
         .header-container {
             position: relative;
             width: 100%;
-            max-width: 1020px;
+            max-width: 928px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 8px;
+            margin: 0 auto 8px auto;
             min-height: 36px;
         }
 
@@ -94,7 +94,7 @@
             height: clamp(14px, 3.5vw, 24px);
         }
 
-        /* 타이틀 맨 끝쪽(1팀 차례 위쪽)에 배치된 컴팩트 초대장 버튼 */
+        /* 오른쪽 조작 박스의 오른쪽 끝선에 완벽히 맞닿는 초대장 버튼 */
         .btn-invite-top {
             position: absolute;
             right: 0;
@@ -104,8 +104,8 @@
             color: #ffffff;
             border: none;
             border-radius: 12px;
-            padding: clamp(4px, 1.1vw, 7px) clamp(7px, 1.6vw, 13px);
-            font-size: clamp(11px, 2.4vw, 13px);
+            padding: clamp(4px, 1.1vw, 7px) clamp(8px, 1.8vw, 14px);
+            font-size: clamp(11.5px, 2.5vw, 13.5px);
             font-weight: 800;
             cursor: pointer;
             display: flex;
@@ -194,22 +194,21 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 1020px;
+            max-width: 928px;
             position: relative;
         }
 
-        /* 핸드폰에서도 꺾이지 않고 옆으로 나란히 배치 */
         .game-layout {
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
             justify-content: center;
             align-items: flex-start;
-            gap: clamp(6px, 1.6vw, 18px);
+            gap: clamp(6px, 1.8vw, 18px);
             width: 100%;
         }
 
-        /* 좌측: 유동적으로 줄어드는 말판 영역 */
+        /* 좌측: 유동적 축소 윷판 */
         #board-wrapper {
             flex: 1 1 52%;
             min-width: 0;
@@ -345,7 +344,7 @@
             transform: scale(1.06);
         }
 
-        /* 우측: 유동적으로 줄어드는 조작 패널 영역 */
+        /* 우측: 조작 및 대기실 패널 */
         #control-panel {
             flex: 1 1 48%;
             min-width: 0;
@@ -760,11 +759,171 @@
             word-break: break-all;
             font-size: 12px;
         }
+
+        /* ============================================================
+           [가로 모드(Landscape) 전용 최적화]
+           세로 높이가 낮은 스마트폰 가로모드(높이 520px 이하)에서도
+           스크롤 없이 한 화면에 윷 던지기 버튼까지 완전히 노출
+        ============================================================ */
+        @media (max-height: 520px) {
+            body {
+                padding: 2px 8px;
+            }
+
+            .header-container {
+                margin: 0 auto 3px auto;
+                min-height: 24px;
+            }
+
+            h1 {
+                font-size: 15px;
+            }
+
+            .cloud-deco {
+                display: none;
+            }
+
+            .btn-invite-top {
+                padding: 3px 7px;
+                font-size: 11px;
+                border-radius: 8px;
+            }
+
+            .game-layout {
+                gap: 8px;
+            }
+
+            #board-wrapper {
+                margin-bottom: 0;
+                padding: 3px;
+                flex: 0 0 auto;
+                width: calc(100vh - 35px);
+                max-width: calc(100vh - 35px);
+            }
+
+            #board-container {
+                width: 100%;
+                height: 100%;
+                border-width: 4px;
+            }
+
+            /* 가로모드에서 결승선이 아래로 잘리지 않도록 말판 내부 우하단에 배치 */
+            .finish-zone {
+                bottom: 4px;
+                right: 4px;
+                padding: 3px 8px;
+                font-size: 10.5px;
+                border-radius: 10px;
+            }
+
+            #control-panel {
+                flex: 1 1 auto;
+                height: calc(100vh - 35px);
+                max-height: calc(100vh - 35px);
+                padding: 4px 8px;
+                justify-content: space-between;
+                border-width: 2px;
+            }
+
+            #turn-info {
+                font-size: 13px;
+                padding: 3px 10px;
+                margin-bottom: 3px;
+            }
+
+            #yut-display-area {
+                min-height: unset;
+                height: auto;
+                padding: 4px 6px;
+                margin-bottom: 3px;
+                border-radius: 10px;
+            }
+
+            .yut-sticks {
+                min-height: 48px;
+                gap: 4px;
+            }
+
+            .yut-stick {
+                width: 20px;
+                height: 48px;
+                border-radius: 6px;
+            }
+
+            .yut-stick.round .x-mark {
+                font-size: 7px;
+            }
+
+            .black-dot {
+                width: 6.5px;
+                height: 6.5px;
+            }
+
+            #result-text {
+                font-size: 15px;
+                height: 18px;
+            }
+
+            #pending-moves-container {
+                min-height: 20px;
+            }
+
+            .pending-title {
+                display: none !important;
+            }
+
+            .move-chip {
+                padding: 1px 6px;
+                font-size: 10px;
+            }
+
+            .pending-placeholder {
+                font-size: 9.5px;
+            }
+
+            #piece-wait-area {
+                padding: 3px 6px;
+                margin-bottom: 3px;
+                border-radius: 10px;
+            }
+
+            #piece-wait-area h4 {
+                display: none;
+            }
+
+            .team-pieces {
+                margin-bottom: 2px;
+            }
+
+            .team-label {
+                font-size: 11px;
+                min-width: 80px;
+            }
+
+            .piece {
+                width: 20px;
+                height: 20px;
+                font-size: 10px;
+            }
+
+            .node .piece {
+                width: 20px;
+                height: 20px;
+                font-size: 10px;
+            }
+
+            .btn-large {
+                margin-top: 2px;
+                padding: 5px 12px;
+                font-size: 13.5px;
+                border-radius: 10px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- 헤더: 중앙 타이틀 + 우측 끝(1팀 차례 위)에 초대장 버튼 -->
+    <!-- 상단 헤더: 아래 우측 박스 끝선에 정확히 맞춰진 초대장 버튼 -->
     <div class="header-container">
         <div class="title-inner">
             <svg class="cloud-deco" viewBox="0 0 100 45">
@@ -780,7 +939,6 @@
             </svg>
         </div>
 
-        <!-- 1팀 차례 위쪽, 타이틀 맨 끝쪽의 아담한 초대장 버튼 -->
         <button class="btn-invite-top" onclick="openInviteModal()">💌 초대장</button>
     </div>
 
@@ -794,13 +952,12 @@
         </div>
     </div>
 
-    <!-- 인게임 메인 화면 (핸드폰에서도 좌우 배치) -->
+    <!-- 인게임 메인 화면 -->
     <div id="game-container">
         <div id="toast-popup"></div>
         <div id="touch-drag-avatar"></div>
 
         <div class="game-layout">
-            <!-- 좌측: 유동적 축소 윷판 -->
             <div id="board-wrapper">
                 <div id="board-container">
                     <svg id="board-svg" viewBox="0 0 450 450"></svg>
@@ -808,7 +965,6 @@
                 </div>
             </div>
 
-            <!-- 우측: 조작 및 대기실 패널 -->
             <div id="control-panel">
                 <div id="turn-info">1팀 차례</div>
 
