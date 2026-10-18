@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>신나는 윷놀이</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --board-bg: #f5efe6;
+            --board-frame: #ebe2d5;
+            --board-inner-line: #cfc2af;
+            --board-grid-line: #cfc4b2;
+            
+            --node-large: #7a6c5d;
+            --node-small: #a89c8d;
+            
+            --title-color: #5e4a3c;
+            
+            /* 팀 컬러 (오렌지, 블루, 그린, 옐로우) */
+            --team-0: #eb6d46;
+            --team-0-shadow: #be4d2a;
+            --team-1: #5a8df2;
+            --team-1-shadow: #3b6ecd;
+            --team-2: #52b77a;
+            --team-2-shadow: #359257;
+            --team-3: #f2ab38;
+            --team-3-shadow: #c78318;
+            
+            /* 팀 색상과 겹치지 않는 중후한 옻칠 우드 브라운 */
+            --throw-btn-bg: #54361c;
+            --throw-btn-shadow: #331f0e;
+
+            --yut-back: #e3a85b;
+            --yut-front: #f2d8a7;
+            --yut-mark: #925826;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 10px 15px;
+            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--title-color);
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .cloud-deco {
+            width: 60px;
+            height: 28px;
+        }
+
+        #setup-screen {
+            background: #fdfbf7;
+            padding: 35px 30px;
+            border-radius: 24px;
+            box-shadow: 0 8px 25px rgba(122, 108, 93, 0.12);
+            text-align: center;
+            border: 3px solid var(--board-frame);
+            max-width: 440px;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        #setup-screen h2 {
+            font-size: 22px;
+            color: var(--title-color);
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .btn {
+            background: var(--title-color);
+            color: white;
+            border: none;
+            padding: 13px 25px;
+            font-size: 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 6px 0;
+            width: 100%;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.95;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 팀 색상과 절대 겹치지 않는 윷 던지기 버튼 */
+        .btn-large {
+            font-size: 21px;
+            padding: 13px 24px;
+            background: var(--throw-btn-bg);
+            box-shadow: 0 4px 0 var(--throw-btn-shadow);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 900;
+            margin-top: 8px;
+            width: 100%;
+            letter-spacing: 0.5px;
+            transition: all 0.1s ease;
+        }
+
+        .btn-large:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--throw-btn-shadow);
+        }
+
+        .btn-large:disabled {
+            background: #d8cebf;
+            box-shadow: none;
+            cursor: not-allowed;
+            color: #888;
+        }
+
+        #game-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1020px;
+            position: relative;
+        }
+
+        .game-layout {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 25px;
+            width: 100%;
+        }
+
+        #board-wrapper {
+            background: #ffffff;
+            padding: 12px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(122, 108, 93, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #board-container {
+            position: relative;
+            width: 470px;
+            height: 470px;
+            background: var(--board-bg);
+            border: 10px solid var(--board-frame);
+            outline: 2px solid var(--board-inner-line);
+            outline-offset: -6px;
+            border-radius: 14px;
+            touch-action: none;
+        }
+
+        #board-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .node {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: var(--node-small);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 2;
+        }
+
+        /* 터치 및 드롭 감지용 투명 히트박스 확장 (직경 62px) */
+        .node::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            pointer-events: auto;
+        }
+
+        .node.corner, .node.center {
+            width: 44px;
+            height: 44px;
+            background: var(--node-large);
+        }
+
+        .node.corner::before, .node.center::before {
+            width: 72px;
+            height: 72px;
+        }
+
+        .node-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.9);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .node.corner .node-label,
+        .node.center .node-label {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .finish-zone {
+            position: absolute;
+            bottom: -50px;
+            right: 8px;
+            background: #52b77a;
+            color: white;
+            padding: 7px 16px;
+            border-radius: 18px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            z-index: 5;
+            cursor: pointer;
+        }
+
+        .finish-zone::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
+            border-radius: 25px;
+            pointer-events: auto;
+        }
+
+        .finish-zone.droppable-target,
+        .node.droppable-target {
+            background: #ffd15c !important;
+            box-shadow: 0 0 16px #ea580c;
+            transform: translate(-50%, -50%) scale(1.25);
+            z-index: 10;
+        }
+
+        .finish-zone.droppable-target {
+            color: #000 !important;
+            transform: scale(1.08);
+        }
+
+        #control-panel {
+            flex: 1;
+            min-width: 340px;
+            max-width: 420px;
+            background: #fdfbf7;
+            padding: 16px 20px;
+            border-radius: 18px;
+            border: 3px solid var(--board-frame);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 6px 20px rgba(122, 108, 93, 0.08);
+        }
+
+        #turn-info {
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            padding: 8px 20px;
+            border-radius: 25px;
+            color: white;
+            background: var(--team-0);
+            width: 100%;
+            text-align: center;
+            letter-spacing: 1px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+        }
+
+        #yut-display-area {
+            width: 100%;
+            height: 220px;
+            background: #ffffff;
+            border: 2px solid var(--board-frame);
+            border-radius: 16px;
+            padding: 10px 14px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .yut-sticks {
+            display: flex;
+            gap: 12px;
+            min-height: 110px;
+            perspective: 600px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .yut-stick {
+            width: 40px;
+            height: 108px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            font-weight: 900;
+            position: relative;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.06);
+            transition: background 0.2s;
+        }
+
+        .yut-stick.round {
+            background: var(--yut-back);
+            border: 2px solid #c98e45;
+        }
+
+        .yut-stick.round .x-mark {
+            color: var(--yut-mark);
+            font-size: 15px;
+            line-height: 1;
+            font-weight: 900;
+        }
+
+        .yut-stick.flat {
+            background: var(--yut-front);
+            border: 2px solid #dfc38d;
+        }
+
+        .black-dot {
+            width: 14px;
+            height: 14px;
+            background-color: #222;
+            border-radius: 50%;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        @keyframes spinYutIndividual {
+            0% { transform: rotateY(0deg) translateY(0); }
+            50% { transform: rotateY(360deg) translateY(-15px); }
+            100% { transform: rotateY(720deg) translateY(0); }
+        }
+
+        .yut-stick.spin-1 { animation: spinYutIndividual 0.45s ease-in-out; }
+        .yut-stick.spin-2 { animation: spinYutIndividual 0.52s ease-in-out; }
+        .yut-stick.spin-3 { animation: spinYutIndividual 0.48s ease-in-out; }
+        .yut-stick.spin-4 { animation: spinYutIndividual 0.55s ease-in-out; }
+
+        #result-text {
+            font-size: 26px;
+            font-weight: 900;
+            color: #222222;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #pending-moves-container {
+            width: 100%;
+            height: 46px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pending-title {
+            font-size: 11px;
+            color: #777;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        #pending-chips-area {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pending-placeholder {
+            font-size: 12px;
+            color: #b5a999;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .move-chip {
+            padding: 4px 12px;
+            background: #ffffff;
+            border: 2px solid var(--board-inner-line);
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--title-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .move-chip.active {
+            background: var(--title-color);
+            color: #ffffff;
+            border-color: var(--title-color);
+            transform: scale(1.06);
+        }
+
+        #piece-wait-area {
+            width: 100%;
+            background: #ffffff;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 2px solid var(--board-frame);
+            margin-bottom: 10px;
+        }
+
+        #piece-wait-area h4 {
+            margin: 0 0 10px 0;
+            color: var(--title-color);
+            font-size: 13px;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .team-pieces {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .team-pieces:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 1팀 (0/4 완주) 텍스트 크기 확대 */
+        .team-label {
+            font-weight: 900;
+            font-size: 15.5px;
+            color: #3a2e25;
+            min-width: 140px;
+            letter-spacing: -0.2px;
+        }
+
+        .pieces-list {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .piece {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: white;
+            font-size: 15px;
+            cursor: grab;
+            position: relative;
+            touch-action: none;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .piece:active {
+            cursor: grabbing;
+            transform: scale(1.15);
+        }
+
+        .piece.team-0 { background: var(--team-0); box-shadow: 0 3px 0 var(--team-0-shadow); }
+        .piece.team-1 { background: var(--team-1); box-shadow: 0 3px 0 var(--team-1-shadow); }
+        .piece.team-2 { background: var(--team-2); box-shadow: 0 3px 0 var(--team-2-shadow); }
+        .piece.team-3 { background: var(--team-3); box-shadow: 0 3px 0 var(--team-3-shadow); }
+
+        .node .piece {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 34px;
+            height: 34px;
+            font-size: 14px;
+            z-index: 3;
+        }
+
+        .stack-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #333;
+            color: #fff;
+            font-size: 10px;
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+            font-weight: 900;
+        }
+
+        /* 패드/모바일 손 터치 드래그 시 손가락을 따라다니는 고스트 아바타 */
+        #touch-drag-avatar {
+            position: fixed;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            color: white;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%) scale(1.15);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            border: 2px solid #fff;
+            display: none;
+        }
+
+        #toast-popup {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(45, 36, 30, 0.9);
+            backdrop-filter: blur(4px);
+            color: #fff;
+            padding: 16px 28px;
+            border-radius: 18px;
+            font-size: 18px;
+            font-weight: 800;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            z-index: 100;
+            display: none;
+            pointer-events: none;
+            text-align: center;
+            border: 2px solid #ffd15c;
+            white-space: pre-line;
+            line-height: 1.45;
+        }
+
+        #game-over-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(50, 40, 30, 0.65);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border: 4px solid var(--board-frame);
+            border-radius: 24px;
+            padding: 28px 24px;
+            text-align: center;
+            max-width: 430px;
+            width: 90%;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.85); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-title {
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 18px;
+            line-height: 1.4;
+        }
+
+        .rank-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            border-radius: 14px;
+            background: #fdfbf7;
+            border: 2px solid var(--board-frame);
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .rank-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rank-team-tag {
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .btn-continue {
+            background: #2d8a4e;
+            margin-bottom: 8px;
+        }
+
+        .btn-restart {
+            background: var(--throw-btn-bg);
+            box-shadow: 0 4px 0 var(--throw-btn-shadow);
+            margin-bottom: 8px;
+        }
+        .btn-setup {
+            background: var(--title-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <svg class="cloud-deco" viewBox="0 0 100 45">
+            <path d="M10 28 C 5 20, 12 10, 28 14 C 36 5, 56 5, 66 16 C 76 12, 90 16, 92 26 C 94 36, 78 38, 65 35 C 50 39, 35 37, 24 33 C 14 36, 8 34, 10 28 Z" fill="#fcf9f2" stroke="#d5c6b0" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M30 24 C 38 21, 48 25, 56 22" stroke="#d5c6b0" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </svg>
+
+        <h1>신나는 윷놀이</h1>
+
+        <svg class="cloud-deco" viewBox="0 0 100 45">
+            <path d="M90 28 C 95 20, 88 10, 72 14 C 64 5, 44 5, 34 16 C 24 12, 10 16, 8 26 C 6 36, 22 38, 35 35 C 50 39, 65 37, 76 33 C 86 36, 92 34, 90 28 Z" fill="#fcf9f2" stroke="#d5c6b0" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M70 24 C 62 21, 52 25, 44 22" stroke="#d5c6b0" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </svg>
+    </div>
+
+    <div id="setup-screen">
+        <h2>참여할 팀 수를 선택하세요</h2>
+        <div>
+            <button class="btn" onclick="selectTeams(2)">2개 팀</button>
+            <button class="btn" onclick="selectTeams(3)">3개 팀</button>
+            <button class="btn" onclick="selectTeams(4)">4개 팀</button>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <div id="toast-popup"></div>
+        <div id="touch-drag-avatar"></div>
+
+        <div class="game-layout">
+            <div id="board-wrapper">
+                <div id="board-container">
+                    <svg id="board-svg"></svg>
+                    <div id="finish-zone" class="finish-zone">🏁 완주 결승선</div>
+                </div>
+            </div>
+
+            <div id="control-panel">
+                <div id="turn-info">1팀 차례</div>
+
+                <div id="yut-display-area">
+                    <div class="yut-sticks" id="yut-sticks">
+                        <!-- 1번 가락은 항상 점이 그려진 빽도 가락 -->
+                        <div class="yut-stick flat"><div class="black-dot"></div></div>
+                        <div class="yut-stick flat"></div>
+                        <div class="yut-stick round"><span class="x-mark">✕</span><span class="x-mark">✕</span><span class="x-mark">✕</span></div>
+                        <div class="yut-stick round"><span class="x-mark">✕</span><span class="x-mark">✕</span><span class="x-mark">✕</span></div>
+                    </div>
+                    <div id="result-text">윷을 돌려주세요</div>
+
+                    <div id="pending-moves-container">
+                        <div class="pending-title" id="pending-title" style="display: none;">원하는 윷 결과를 선택하거나 목적지로 드래그하세요:</div>
+                        <div id="pending-chips-area">
+                            <div class="pending-placeholder">윷을 던지면 이동할 윷패가 표시됩니다</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="piece-wait-area">
+                    <h4>대기 중인 말 (끌어서 노란색 하이라이트 칸으로 이동)</h4>
+                    <div id="waiting-pieces-list"></div>
+                </div>
+
+                <button class="btn btn-large" id="throw-btn" onclick="throwYut()">윷 던지기 🎲</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-over-modal" style="display: none;">
+        <div class="modal-box">
+            <div class="modal-title" id="winner-title">🎉 순위 발표 🎉</div>
+            <div class="modal-desc" id="winner-desc">경기 결과가 확정되었습니다!</div>
+            
+            <div class="rank-list-container" id="rank-list-area"></div>
+
+            <button class="btn btn-continue" id="btn-continue-game" style="display: none;" onclick="continueGame()">게임 계속하기 (다음 순위전) ⏩</button>
+            <button class="btn btn-restart" onclick="restartCurrentGame()">새로운 게임하기</button>
+            <button class="btn btn-setup" onclick="backToTeamSelect()">팀선택으로 돌아가기</button>
+        </div>
+    </div>
+
+    <script>
+        let audioCtx = null;
+        const teamColors = ['#eb6d46', '#5a8df2', '#52b77a', '#f2ab38'];
+        const teamNames = ['1팀', '2팀', '3팀', '4팀'];
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-popup');
+            if (toast) {
+                const formatted = msg.replace(/([.?!])\s+/g, '$1\n').trim();
+                toast.innerText = formatted;
+                toast.style.display = 'block';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 1600);
+            }
+        }
+
+        function playSound(type) {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const now = audioCtx.currentTime;
+
+                if (type === 'roll') {
+                    for(let i=0; i<4; i++) {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(180 + Math.random()*250, now + i*0.06);
+                        gain.gain.setValueAtTime(0.12, now + i*0.06);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + i*0.06 + 0.05);
+                        osc.start(now + i*0.06);
+                        osc.stop(now + i*0.06 + 0.05);
+                    }
+                } else if (type === 'result') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(360, now);
+                    osc.frequency.exponentialRampToValueAtTime(130, now + 0.2);
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'move') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(450, now);
+                    osc.frequency.setValueAtTime(650, now + 0.08);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+                    osc.start(now);
+                    osc.stop(now + 0.12);
+                } else if (type === 'catch') {
+                    const chimeNotes = [523.25, 783.99];
+                    chimeNotes.forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.type = 'sine';
+                        const start = now + (idx * 0.09);
+                        osc.frequency.setValueAtTime(freq, start);
+                        gain.gain.setValueAtTime(0.2, start);
+                        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.22);
+                        osc.start(start);
+                        osc.stop(start + 0.22);
+                    });
+                } else if (type === 'finish') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.1);
+                    osc.frequency.setValueAtTime(783.99, now + 0.2);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                }
+            } catch(e) {}
+        }
+
+        let totalTeams = 2;
+        let currentTurn = 0;
+        let pendingMoves = [];
+        let selectedMoveIndex = 0;
+        let draggedPieceGroup = [];
+        let isThrowing = false;
+        let remainingThrows = 1;
+        let teamRankings = [];
+
+        const nodePositions = [
+            {x: 420, y: 420}, {x: 420, y: 342}, {x: 420, y: 264}, {x: 420, y: 186}, {x: 420, y: 108},
+            {x: 420, y: 30},  {x: 342, y: 30},  {x: 264, y: 30},  {x: 186, y: 30},  {x: 108, y: 30},
+            {x: 30, y: 30},   {x: 30, y: 108},  {x: 30, y: 186},  {x: 30, y: 264},  {x: 30, y: 342},
+            {x: 30, y: 420},  {x: 108, y: 420}, {x: 186, y: 420}, {x: 264, y: 420}, {x: 342, y: 420},
+            {x: 355, y: 95},  {x: 290, y: 160}, {x: 95, y: 95},   {x: 160, y: 160},
+            {x: 225, y: 225}, {x: 290, y: 290}, {x: 355, y: 355}, {x: 160, y: 290}, {x: 95, y: 355}
+        ];
+
+        let pieces = [];
+
+        function drawBoardLines() {
+            const svg = document.getElementById('board-svg');
+            if (!svg) return;
+            svg.innerHTML = '';
+
+            const lines = [
+                [0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],
+                [10,11],[11,12],[12,13],[13,14],[14,15],[15,16],[16,17],[17,18],[18,19],[19,0],
+                [5,20],[20,21],[21,24],[24,27],[27,28],[28,15],
+                [10,22],[22,23],[23,24],[24,25],[25,26],[26,0]
+            ];
+
+            lines.forEach(([start, end]) => {
+                const p1 = nodePositions[start];
+                const p2 = nodePositions[end];
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', p1.x);
+                line.setAttribute('y1', p1.y);
+                line.setAttribute('x2', p2.x);
+                line.setAttribute('y2', p2.y);
+                line.setAttribute('stroke', '#cfc4b2');
+                line.setAttribute('stroke-width', '2.5');
+                svg.appendChild(line);
+            });
+        }
+
+        function initGame() {
+            document.getElementById('game-over-modal').style.display = 'none';
+            const board = document.getElementById('board-container');
+            document.querySelectorAll('.node').forEach(n => n.remove());
+
+            drawBoardLines();
+
+            board.ondragover = (e) => e.preventDefault();
+            board.ondrop = (e) => onBoardContainerDrop(e);
+
+            nodePositions.forEach((pos, idx) => {
+                const node = document.createElement('div');
+                node.className = 'node';
+                if (idx === 0 || idx === 5 || idx === 10 || idx === 15) node.classList.add('corner');
+                if (idx === 24) node.classList.add('center');
+                node.style.left = pos.x + 'px';
+                node.style.top = pos.y + 'px';
+                node.id = `node-${idx}`;
+
+                const label = document.createElement('span');
+                label.className = 'node-label';
+                label.innerText = idx === 0 ? '출발' : idx;
+                node.appendChild(label);
+
+                node.ondragover = (e) => e.preventDefault();
+                node.ondrop = (e) => {
+                    e.stopPropagation();
+                    onNodeDrop(e, idx);
+                };
+                node.onclick = () => onNodeClick(idx);
+
+                board.appendChild(node);
+            });
+
+            const finishZone = document.getElementById('finish-zone');
+            if (finishZone) {
+                finishZone.ondragover = (e) => e.preventDefault();
+                finishZone.ondrop = (e) => {
+                    e.stopPropagation();
+                    onNodeDrop(e, 100);
+                };
+                finishZone.onclick = () => onNodeClick(100);
+            }
+
+            pieces = [];
+            for (let t = 0; t < totalTeams; t++) {
+                for (let p = 0; p < 4; p++) {
+                    pieces.push({ 
+                        id: t * 4 + p, 
+                        team: t, 
+                        location: -1, 
+                        cameFromDiag: false, 
+                        atStartViaBackDo: false 
+                    });
+                }
+            }
+
+            pendingMoves = [];
+            selectedMoveIndex = 0;
+            currentTurn = 0;
+            isThrowing = false;
+            remainingThrows = 1;
+            teamRankings = [];
+
+            const resText = document.getElementById('result-text');
+            resText.innerText = '윷을 돌려주세요';
+            resText.style.color = '#222222';
+
+            updateThrowButtonUI();
+            renderBoardPieces();
+            renderWaitingPieces();
+            updateTurnUI();
+            renderPendingChips();
+        }
+
+        // 터치 및 마우스 드롭 좌표를 기준 삼아 가장 가까운 유효 타깃 자동 탐색
+        function findClosestTargetFromCoords(clientX, clientY) {
+            const board = document.getElementById('board-container');
+            const rect = board.getBoundingClientRect();
+            const dropX = clientX - rect.left;
+            const dropY = clientY - rect.top;
+
+            if (!draggedPieceGroup || draggedPieceGroup.length === 0) return -1;
+
+            const piece = draggedPieceGroup[0];
+            const loc = piece.location;
+            const validTargets = [];
+            pendingMoves.forEach(m => {
+                const target = calculateNextNode(loc, m.val, piece);
+                if (!validTargets.includes(target)) validTargets.push(target);
+            });
+
+            let closestTarget = -1;
+            let minDistance = 65;
+
+            validTargets.forEach(tIdx => {
+                if (tIdx === 100) {
+                    const fZone = document.getElementById('finish-zone');
+                    if (fZone) {
+                        const fRect = fZone.getBoundingClientRect();
+                        const fCenterX = fRect.left + fRect.width / 2 - rect.left;
+                        const fCenterY = fRect.top + fRect.height / 2 - rect.top;
+                        const dist = Math.hypot(fCenterX - dropX, fCenterY - dropY);
+                        if (dist < minDistance + 25) {
+                            minDistance = dist;
+                            closestTarget = 100;
+                        }
+                    }
+                } else if (nodePositions[tIdx]) {
+                    const pos = nodePositions[tIdx];
+                    const dist = Math.hypot(pos.x - dropX, pos.y - dropY);
+                    if (dist < minDistance) {
+                        minDistance = dist;
+                        closestTarget = tIdx;
+                    }
+                }
+            });
+
+            return closestTarget;
+        }
+
+        function onBoardContainerDrop(e) {
+            e.preventDefault();
+            const target = findClosestTargetFromCoords(e.clientX, e.clientY);
+            if (target !== -1) {
+                handlePieceMoveTo(target);
+            }
+        }
+
+        function selectTeams(num) {
+            totalTeams = num;
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('game-container').style.display = 'flex';
+            initGame();
+        }
+
+        function restartCurrentGame() {
+            initGame();
+        }
+
+        function backToTeamSelect() {
+            document.getElementById('game-over-modal').style.display = 'none';
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('setup-screen').style.display = 'block';
+        }
+
+        function updateTurnUI() {
+            const info = document.getElementById('turn-info');
+            info.innerText = `${teamNames[currentTurn]} 차례`;
+            info.style.backgroundColor = teamColors[currentTurn];
+        }
+
+        function updateThrowButtonUI() {
+            const btn = document.getElementById('throw-btn');
+            if (remainingThrows > 0) {
+                btn.disabled = false;
+                btn.innerText = remainingThrows > 1 ? `윷 던지기 🎲 (${remainingThrows}번 남음)` : '윷 던지기 🎲';
+            } else {
+                btn.disabled = true;
+                btn.innerText = '윷 던지기 🎲';
+            }
+        }
+
+        // 민속 표준 비율(배 55%) 및 1번 빽도 가락 영구 반영
+        function throwYut() {
+            const throwBtn = document.getElementById('throw-btn');
+            if (isThrowing || remainingThrows <= 0) return;
+
+            isThrowing = true;
+            throwBtn.disabled = true;
+            remainingThrows--;
+
+            const yutSticks = document.querySelectorAll('.yut-stick');
+            yutSticks.forEach((stick, idx) => {
+                stick.classList.remove('spin-1', 'spin-2', 'spin-3', 'spin-4');
+                void stick.offsetWidth;
+                stick.classList.add(`spin-${idx + 1}`);
+            });
+
+            playSound('roll');
+
+            setTimeout(() => {
+                let flatCount = 0;
+                let stickStates = [];
+
+                // 4개의 윷가락 던지기 (표준 평면 확률 55%)
+                for (let i = 0; i < 4; i++) {
+                    const isFlat = Math.random() < 0.55;
+                    stickStates.push(isFlat);
+                    if (isFlat) flatCount++;
+                }
+
+                // 1번 가락(i===0)은 언제나 빽도 표식 가락
+                const isBackDoStickFlat = stickStates[0];
+                let isBackDo = false;
+                let moveVal = 0;
+                let resultName = '';
+
+                // 배(flat)가 1개 나왔는데 그것이 1번(점 박힌 빽도 가락)이면 빽도!
+                if (flatCount === 1 && isBackDoStickFlat) {
+                    isBackDo = true;
+                    moveVal = -1;
+                    resultName = '빽도 (-1)';
+                } else if (flatCount === 1) {
+                    moveVal = 1;
+                    resultName = '도 (+1)';
+                } else if (flatCount === 2) {
+                    moveVal = 2;
+                    resultName = '개 (+2)';
+                } else if (flatCount === 3) {
+                    moveVal = 3;
+                    resultName = '걸 (+3)';
+                } else if (flatCount === 4) {
+                    moveVal = 4;
+                    resultName = '윷 (+4)';
+                } else {
+                    moveVal = 5;
+                    resultName = '모 (+5)';
+                }
+
+                // 윷가락 그래픽 구성 (1번 가락이 flat일 때 언제나 점이 보임)
+                let sticksHTML = '';
+                for (let i = 0; i < 4; i++) {
+                    if (stickStates[i]) {
+                        const dotMark = (i === 0) ? '<div class="black-dot"></div>' : '';
+                        sticksHTML += `<div class="yut-stick flat">${dotMark}</div>`;
+                    } else {
+                        sticksHTML += `
+                            <div class="yut-stick round">
+                                <span class="x-mark">✕</span>
+                                <span class="x-mark">✕</span>
+                                <span class="x-mark">✕</span>
+                            </div>`;
+                    }
+                }
+
+                document.getElementById('yut-sticks').innerHTML = sticksHTML;
+                playSound('result');
+
+                const resultTextEl = document.getElementById('result-text');
+                resultTextEl.innerText = resultName.split(' ')[0];
+                resultTextEl.style.color = teamColors[currentTurn];
+
+                pendingMoves.push({ val: moveVal, name: resultName });
+                selectedMoveIndex = pendingMoves.length - 1;
+
+                if (moveVal === 4 || moveVal === 5) {
+                    remainingThrows++;
+                }
+
+                renderPendingChips();
+                isThrowing = false;
+                updateThrowButtonUI();
+
+                setTimeout(() => {
+                    checkAndPassIfNoMoves();
+                }, 200);
+            }, 500);
+        }
+
+        function renderPendingChips() {
+            const area = document.getElementById('pending-chips-area');
+            const title = document.getElementById('pending-title');
+            area.innerHTML = '';
+
+            if (pendingMoves.length === 0) {
+                title.style.display = 'none';
+                area.innerHTML = '<div class="pending-placeholder">윷을 던지면 이동할 윷패가 표시됩니다</div>';
+                return;
+            }
+
+            title.style.display = 'block';
+
+            pendingMoves.forEach((item, index) => {
+                const chip = document.createElement('div');
+                chip.className = `move-chip ${index === selectedMoveIndex ? 'active' : ''}`;
+                chip.innerText = item.name;
+                chip.onclick = () => {
+                    selectedMoveIndex = index;
+                    renderPendingChips();
+                    if (draggedPieceGroup.length > 0) {
+                        highlightTargetsForPiece(draggedPieceGroup[0]);
+                    }
+                };
+                area.appendChild(chip);
+            });
+        }
+
+        function calculateNextNode(currentLoc, step, piece = null) {
+            if (currentLoc === -1) {
+                return step === -1 ? -1 : step;
+            }
+
+            if (currentLoc === 0) {
+                if (step === -1) {
+                    if (piece && piece.atStartViaBackDo) {
+                        return 1;
+                    }
+                    return 19;
+                }
+                return 100;
+            }
+
+            if (currentLoc === 1 && step === -1) {
+                return 0;
+            }
+
+            if (currentLoc === 15 && step === -1) {
+                if (piece && piece.cameFromDiag) {
+                    return 28;
+                }
+                return 14;
+            }
+
+            if (currentLoc === 5 && step > 0) {
+                const diagFrom5 = [20, 21, 24, 27, 28, 15, 16, 17, 18, 19, 0, 100];
+                return diagFrom5[step - 1] !== undefined ? diagFrom5[step - 1] : 100;
+            }
+
+            if (currentLoc === 10 && step > 0) {
+                const diagFrom10 = [22, 23, 24, 25, 26, 0, 100];
+                return diagFrom10[step - 1] !== undefined ? diagFrom10[step - 1] : 100;
+            }
+
+            if (currentLoc === 24) {
+                if (step === -1) return 21;
+                const from24 = [25, 26, 0, 100, 100];
+                return from24[step - 1] !== undefined ? from24[step - 1] : 100;
+            }
+
+            if (currentLoc === 20) {
+                if (step === -1) return 5;
+                const seq20 = [21, 24, 27, 28, 15, 16, 17, 18, 19, 0, 100];
+                return seq20[step - 1] !== undefined ? seq20[step - 1] : 100;
+            }
+            if (currentLoc === 21) {
+                if (step === -1) return 20;
+                const seq21 = [24, 27, 28, 15, 16, 17, 18, 19, 0, 100];
+                return seq21[step - 1] !== undefined ? seq21[step - 1] : 100;
+            }
+
+            if (currentLoc === 22) {
+                if (step === -1) return 10;
+                const seq22 = [23, 24, 25, 26, 0, 100];
+                return seq22[step - 1] !== undefined ? seq22[step - 1] : 100;
+            }
+            if (currentLoc === 23) {
+                if (step === -1) return 22;
+                const seq23 = [24, 25, 26, 0, 100];
+                return seq23[step - 1] !== undefined ? seq23[step - 1] : 100;
+            }
+
+            if (currentLoc === 25) {
+                if (step === -1) return 24;
+                const seq25 = [26, 0, 100, 100, 100];
+                return seq25[step - 1] !== undefined ? seq25[step - 1] : 100;
+            }
+            if (currentLoc === 26) {
+                if (step === -1) return 25;
+                const seq26 = [0, 100, 100, 100, 100];
+                return seq26[step - 1] !== undefined ? seq26[step - 1] : 100;
+            }
+
+            if (currentLoc === 27) {
+                if (step === -1) return 24;
+                const seq27 = [28, 15, 16, 17, 18, 19, 0, 100];
+                return seq27[step - 1] !== undefined ? seq27[step - 1] : 100;
+            }
+            if (currentLoc === 28) {
+                if (step === -1) return 27;
+                const seq28 = [15, 16, 17, 18, 19, 0, 100];
+                return seq28[step - 1] !== undefined ? seq28[step - 1] : 100;
+            }
+
+            let loc = currentLoc;
+            if (step > 0) {
+                for (let i = 0; i < step; i++) {
+                    if (loc === 19) {
+                        loc = 0;
+                    } else if (loc === 0) {
+                        return 100;
+                    } else {
+                        loc++;
+                    }
+                }
+                return loc;
+            } else {
+                if (loc === 0) return 19;
+                return loc - 1;
+            }
+        }
+
+        function highlightTargetsForPiece(piece) {
+            clearHighlights();
+
+            const targetsMap = new Map();
+            pendingMoves.forEach((moveItem, idx) => {
+                const target = calculateNextNode(piece.location, moveItem.val, piece);
+                if (!targetsMap.has(target)) {
+                    targetsMap.set(target, []);
+                }
+                targetsMap.get(target).push(idx);
+            });
+
+            targetsMap.forEach((moveIndices, targetNode) => {
+                if (targetNode === 100) {
+                    const fZone = document.getElementById('finish-zone');
+                    if (fZone) fZone.classList.add('droppable-target');
+
+                    if (piece.location === 0) {
+                        const startNode = document.getElementById('node-0');
+                        if (startNode) startNode.classList.add('droppable-target');
+                    }
+                } else if (targetNode >= 0) {
+                    const nodeEl = document.getElementById(`node-${targetNode}`);
+                    if (nodeEl) {
+                        nodeEl.classList.add('droppable-target');
+                    }
+                }
+            });
+        }
+
+        function onPieceClick(piece) {
+            if (pendingMoves.length === 0) return;
+            if (piece.team !== currentTurn) {
+                showToast('자신의 팀 말만 선택할 수 있습니다!');
+                return;
+            }
+
+            if (piece.location === -1) {
+                draggedPieceGroup = [piece];
+            } else {
+                draggedPieceGroup = pieces.filter(p => p.team === piece.team && p.location === piece.location);
+            }
+
+            highlightTargetsForPiece(piece);
+        }
+
+        function onNodeClick(targetNodeIdx) {
+            if (!draggedPieceGroup || draggedPieceGroup.length === 0) return;
+            handlePieceMoveTo(targetNodeIdx);
+        }
+
+        function onDragStart(e, piece) {
+            if (pendingMoves.length === 0) {
+                e.preventDefault();
+                showToast('먼저 윷을 던져주세요!');
+                return;
+            }
+            if (piece.team !== currentTurn) {
+                e.preventDefault();
+                showToast('자신의 팀 말만 드래그할 수 있습니다!');
+                return;
+            }
+
+            if (piece.location === -1) {
+                draggedPieceGroup = [piece];
+            } else {
+                draggedPieceGroup = pieces.filter(p => p.team === piece.team && p.location === piece.location);
+            }
+
+            highlightTargetsForPiece(piece);
+        }
+
+        function clearHighlights() {
+            document.querySelectorAll('.node').forEach(n => {
+                n.classList.remove('droppable-target');
+            });
+            const fZone = document.getElementById('finish-zone');
+            if (fZone) fZone.classList.remove('droppable-target');
+        }
+
+        function onNodeDrop(e, targetNodeIdx) {
+            e.preventDefault();
+            if (!draggedPieceGroup || draggedPieceGroup.length === 0) return;
+            handlePieceMoveTo(targetNodeIdx);
+        }
+
+        function handlePieceMoveTo(targetNodeIdx) {
+            const piece = draggedPieceGroup[0];
+            const loc = piece.location;
+
+            let effectiveTargetIdx = targetNodeIdx;
+            if (loc === 0 && targetNodeIdx === 0) {
+                const canFinish = pendingMoves.some(m => calculateNextNode(0, m.val, piece) === 100);
+                if (canFinish) effectiveTargetIdx = 100;
+            }
+
+            let usedMoveIndex = -1;
+            if (pendingMoves[selectedMoveIndex] && calculateNextNode(loc, pendingMoves[selectedMoveIndex].val, piece) === effectiveTargetIdx) {
+                usedMoveIndex = selectedMoveIndex;
+            } else {
+                usedMoveIndex = pendingMoves.findIndex(m => calculateNextNode(loc, m.val, piece) === effectiveTargetIdx);
+            }
+
+            if (usedMoveIndex === -1) {
+                clearHighlights();
+                showToast('정해진 전진 경로 외로는 이동할 수 없습니다!');
+                return;
+            }
+
+            clearHighlights();
+            movePieceGroup(draggedPieceGroup, effectiveTargetIdx, usedMoveIndex);
+        }
+
+        function movePieceGroup(group, targetNodeIdx, usedMoveIndex) {
+            let caught = false;
+            const fromLoc = group[0].location;
+            const isFromDiag = [5, 20, 21, 24, 27, 28].includes(fromLoc);
+            const isBackDoFrom1 = (fromLoc === 1 && targetNodeIdx === 0);
+
+            if (targetNodeIdx === 100) {
+                playSound('finish');
+                group.forEach(p => { 
+                    p.location = 100; 
+                    p.cameFromDiag = false;
+                    p.atStartViaBackDo = false;
+                });
+                showToast('🎉 말 완주 성공! 결승선을 통과했습니다!');
+            } else {
+                playSound('move');
+                group.forEach(p => { 
+                    p.location = targetNodeIdx; 
+                    if (targetNodeIdx === 15) {
+                        p.cameFromDiag = isFromDiag;
+                    } else if (targetNodeIdx !== 28) {
+                        p.cameFromDiag = false;
+                    }
+
+                    if (isBackDoFrom1) {
+                        p.atStartViaBackDo = true;
+                    } else if (targetNodeIdx !== 0) {
+                        p.atStartViaBackDo = false;
+                    }
+                });
+
+                if (targetNodeIdx === 0) {
+                    if (isBackDoFrom1) {
+                        showToast('🚩 빽도로 출발선에 도착했습니다!\n다음 턴에 앞으로 가면 완주하며, 빽도 시 1번으로 되돌아갑니다.');
+                    } else {
+                        showToast('🚩 출발선에 도착했습니다!\n다음 턴에 결승선으로 완주할 수 있습니다!');
+                    }
+                } else if (fromLoc === 0 && targetNodeIdx === 1) {
+                    showToast('↩️ 빽도 특권 취소!\n공식 규정에 따라 1번 자리로 되돌아갑니다.');
+                }
+
+                pieces.forEach(other => {
+                    if (other.location === targetNodeIdx && other.team !== group[0].team) {
+                        other.location = -1;
+                        other.cameFromDiag = false;
+                        other.atStartViaBackDo = false;
+                        caught = true;
+                    }
+                });
+            }
+
+            pendingMoves.splice(usedMoveIndex, 1);
+            selectedMoveIndex = 0;
+
+            if (caught) {
+                playSound('catch');
+                remainingThrows += 1;
+                showToast('⚔️ 상대팀 말을 잡았습니다!\n윷을 한 번 더 돌릴 수 있습니다!');
+                updateThrowButtonUI();
+            }
+
+            renderPendingChips();
+            draggedPieceGroup = [];
+
+            renderBoardPieces();
+            renderWaitingPieces();
+            updateTurnUI();
+
+            if (checkWin(group[0].team)) {
+                return;
+            }
+
+            checkAndPassIfNoMoves();
+        }
+
+        function checkAndPassIfNoMoves() {
+            if (remainingThrows > 0) {
+                return false;
+            }
+
+            const remainingPieces = pieces.filter(p => p.team === currentTurn && p.location !== 100);
+
+            if (remainingPieces.length === 0) {
+                showToast(`${teamNames[currentTurn]}의 모든 말이 완주했습니다!\n다음 팀으로 차례가 넘어갑니다.`);
+                setTimeout(() => { passToNextTurn(); }, 700);
+                return true;
+            }
+
+            if (pendingMoves.length > 0) {
+                let hasAnyValidMove = false;
+                for (const piece of remainingPieces) {
+                    for (const move of pendingMoves) {
+                        const nextLoc = calculateNextNode(piece.location, move.val, piece);
+                        if (piece.location === -1 && nextLoc === -1) continue;
+                        if (nextLoc >= 0 || nextLoc === 100) {
+                            hasAnyValidMove = true;
+                            break;
+                        }
+                    }
+                    if (hasAnyValidMove) break;
+                }
+
+                if (!hasAnyValidMove) {
+                    showToast('더 이상 이동할 수 있는 말이 없습니다.\n다음 팀으로 차례가 넘어갑니다.');
+                    setTimeout(() => { passToNextTurn(); }, 700);
+                    return true;
+                }
+            } else {
+                passToNextTurn();
+                return true;
+            }
+
+            return false;
+        }
+
+        function passToNextTurn() {
+            pendingMoves = [];
+            selectedMoveIndex = 0;
+            renderPendingChips();
+            draggedPieceGroup = [];
+            clearHighlights();
+
+            let nextTurn = (currentTurn + 1) % totalTeams;
+            let checkedCount = 0;
+            while (checkedCount < totalTeams) {
+                const remainingCount = pieces.filter(p => p.team === nextTurn && p.location !== 100).length;
+                if (remainingCount > 0 && !teamRankings.includes(nextTurn)) {
+                    break;
+                }
+                nextTurn = (nextTurn + 1) % totalTeams;
+                checkedCount++;
+            }
+
+            currentTurn = nextTurn;
+            remainingThrows = 1;
+            isThrowing = false;
+
+            const resText = document.getElementById('result-text');
+            resText.innerText = '윷을 돌려주세요';
+            resText.style.color = '#222222';
+
+            updateThrowButtonUI();
+            updateTurnUI();
+        }
+
+        function checkWin(teamIdx) {
+            const finished = pieces.filter(p => p.team === teamIdx && p.location === 100);
+            if (finished.length === 4 && !teamRankings.includes(teamIdx)) {
+                teamRankings.push(teamIdx);
+                playSound('finish');
+
+                const rank = teamRankings.length;
+                const winnerTitle = document.getElementById('winner-title');
+                const winnerDesc = document.getElementById('winner-desc');
+                const btnContinue = document.getElementById('btn-continue-game');
+                const rankListArea = document.getElementById('rank-list-area');
+
+                const isFinalComplete = (totalTeams === 2) || (teamRankings.length === totalTeams - 1);
+
+                if (isFinalComplete) {
+                    if (teamRankings.length < totalTeams) {
+                        for (let t = 0; t < totalTeams; t++) {
+                            if (!teamRankings.includes(t)) {
+                                teamRankings.push(t);
+                                break;
+                            }
+                        }
+                    }
+
+                    winnerTitle.innerText = '🏆 최종 순위 발표 🏆';
+                    winnerTitle.style.color = '#333';
+                    winnerDesc.innerText = '모든 팀의 치열한 승부가 끝났습니다!';
+                    btnContinue.style.display = 'none';
+
+                    renderRankList(rankListArea);
+                    document.getElementById('game-over-modal').style.display = 'flex';
+                    return true;
+                } else {
+                    winnerTitle.innerText = `🎉 ${teamNames[teamIdx]} ${rank}등 완주! 🎉`;
+                    winnerTitle.style.color = teamColors[teamIdx];
+                    winnerDesc.innerText = `${teamNames[teamIdx]}이 ${rank}등으로 모든 말을 완주시켰습니다!\n다음 순위 경쟁을 계속하시겠습니까?`;
+                    btnContinue.style.display = 'block';
+
+                    renderRankList(rankListArea);
+                    document.getElementById('game-over-modal').style.display = 'flex';
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function renderRankList(container) {
+            container.innerHTML = '';
+            const medalIcons = ['🥇 1등', '🥈 2등', '🥉 3등', '🎖️ 4등'];
+
+            teamRankings.forEach((tIdx, idx) => {
+                const item = document.createElement('div');
+                item.className = 'rank-item';
+
+                const badge = document.createElement('div');
+                badge.className = 'rank-badge';
+                badge.innerText = medalIcons[idx] || `${idx + 1}등`;
+
+                const tag = document.createElement('span');
+                tag.className = 'rank-team-tag';
+                tag.style.backgroundColor = teamColors[tIdx];
+                tag.innerText = teamNames[tIdx];
+
+                item.appendChild(badge);
+                item.appendChild(tag);
+                container.appendChild(item);
+            });
+        }
+
+        function continueGame() {
+            document.getElementById('game-over-modal').style.display = 'none';
+            passToNextTurn();
+        }
+
+        // 터치 드래그 리스너 바인딩 (패드/스마트폰 터치 지원)
+        function bindPieceEvents(pEl, piece) {
+            // 데스크톱 마우스 드래그 & 클릭
+            pEl.draggable = true;
+            pEl.ondragstart = (e) => onDragStart(e, piece);
+            pEl.onclick = (e) => {
+                e.stopPropagation();
+                onPieceClick(piece);
+            };
+
+            // 태블릿/패드 터치 드래그 앤 드롭
+            pEl.addEventListener('touchstart', (e) => {
+                if (pendingMoves.length === 0 || piece.team !== currentTurn) {
+                    onPieceClick(piece);
+                    return;
+                }
+                e.preventDefault();
+
+                if (piece.location === -1) {
+                    draggedPieceGroup = [piece];
+                } else {
+                    draggedPieceGroup = pieces.filter(p => p.team === piece.team && p.location === piece.location);
+                }
+
+                highlightTargetsForPiece(piece);
+
+                const avatar = document.getElementById('touch-drag-avatar');
+                const touch = e.touches[0];
+                avatar.className = `piece team-${piece.team}`;
+                avatar.innerText = `${piece.team + 1}`;
+                avatar.style.left = touch.clientX + 'px';
+                avatar.style.top = touch.clientY + 'px';
+                avatar.style.display = 'flex';
+            }, { passive: false });
+
+            pEl.addEventListener('touchmove', (e) => {
+                const avatar = document.getElementById('touch-drag-avatar');
+                if (avatar.style.display === 'flex') {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    avatar.style.left = touch.clientX + 'px';
+                    avatar.style.top = touch.clientY + 'px';
+                }
+            }, { passive: false });
+
+            pEl.addEventListener('touchend', (e) => {
+                const avatar = document.getElementById('touch-drag-avatar');
+                if (avatar.style.display === 'flex') {
+                    avatar.style.display = 'none';
+                    const touch = e.changedTouches[0];
+
+                    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                    let targetIdx = -1;
+
+                    if (element) {
+                        const node = element.closest('.node');
+                        const finishZone = element.closest('.finish-zone');
+                        if (node) {
+                            targetIdx = parseInt(node.id.replace('node-', ''), 10);
+                        } else if (finishZone) {
+                            targetIdx = 100;
+                        }
+                    }
+
+                    if (targetIdx === -1) {
+                        targetIdx = findClosestTargetFromCoords(touch.clientX, touch.clientY);
+                    }
+
+                    if (targetIdx !== -1) {
+                        handlePieceMoveTo(targetIdx);
+                    } else {
+                        clearHighlights();
+                    }
+                }
+            });
+        }
+
+        function renderBoardPieces() {
+            document.querySelectorAll('.node').forEach(n => {
+                n.querySelectorAll('.piece').forEach(p => p.remove());
+            });
+
+            const nodeMap = {};
+            pieces.forEach(p => {
+                if (p.location >= 0 && p.location < 100) {
+                    if (!nodeMap[p.location]) nodeMap[p.location] = [];
+                    nodeMap[p.location].push(p);
+                }
+            });
+
+            Object.keys(nodeMap).forEach(nodeIdx => {
+                const nodeEl = document.getElementById(`node-${nodeIdx}`);
+                const pList = nodeMap[nodeIdx];
+                if (pList.length > 0) {
+                    const firstPiece = pList[0];
+                    const pEl = document.createElement('div');
+                    pEl.className = `piece team-${firstPiece.team}`;
+                    pEl.innerText = `${firstPiece.team + 1}`;
+
+                    bindPieceEvents(pEl, firstPiece);
+
+                    if (pList.length > 1) {
+                        const badge = document.createElement('div');
+                        badge.className = 'stack-badge';
+                        badge.innerText = pList.length;
+                        pEl.appendChild(badge);
+                    }
+                    nodeEl.appendChild(pEl);
+                }
+            });
+        }
+
+        function renderWaitingPieces() {
+            const listEl = document.getElementById('waiting-pieces-list');
+            listEl.innerHTML = '';
+
+            for (let t = 0; t < totalTeams; t++) {
+                const teamBox = document.createElement('div');
+                teamBox.className = 'team-pieces';
+
+                const finishedCount = pieces.filter(p => p.team === t && p.location === 100).length;
+                const isCompleted = teamRankings.includes(t);
+
+                const label = document.createElement('div');
+                label.className = 'team-label';
+                label.innerText = `${t + 1}팀 (${finishedCount}/4 완주)${isCompleted ? ' 🏁' : ''}:`;
+                teamBox.appendChild(label);
+
+                const piecesList = document.createElement('div');
+                piecesList.className = 'pieces-list';
+
+                const waiting = pieces.filter(p => p.team === t && p.location === -1);
+                waiting.forEach(p => {
+                    const pEl = document.createElement('div');
+                    pEl.className = `piece team-${t}`;
+                    pEl.innerText = `${t + 1}`;
+
+                    bindPieceEvents(pEl, p);
+                    piecesList.appendChild(pEl);
+                });
+
+                teamBox.appendChild(piecesList);
+                listEl.appendChild(teamBox);
+            }
+        }
+    </script>
+</body>
+</html>
