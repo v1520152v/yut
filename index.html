@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <!-- 브라우저 타이틀 -->
     <title>신나는 윷놀이</title>
     <meta name="description" content="다운로드 없이 인터넷 창에서 바로 즐기는 무료 전통 윷놀이! 2~4팀 대결, 공식 경기 규칙, 모바일/태블릿 터치 드래그 지원.">
     <meta name="keywords" content="윷놀이, 무료 윷놀이, 웹 윷놀이, 온라인 윷놀이, 윷놀이 게임, 신나는 윷놀이, 전통 윷놀이, 명절 게임">
     <meta name="robots" content="index, follow">
 
-    <!-- 카카오톡 및 SNS 공유용 오픈그래프 -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="신나는 윷놀이">
     <meta property="og:description" content="다운로드 없이 브라우저에서 바로 즐기는 2~4팀 전통 윷놀이 게임에 초대합니다!">
@@ -54,7 +52,7 @@
 
         body {
             margin: 0;
-            padding: 8px 10px;
+            padding: 6px 8px;
             background-color: var(--bg-color);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
             display: flex;
@@ -64,25 +62,62 @@
             overflow-x: hidden;
         }
 
+        /* 상단 헤더: 타이틀 중앙, 초대장 버튼 우측 끝(1팀 차례 위) */
         .header-container {
+            position: relative;
+            width: 100%;
+            max-width: 1020px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            min-height: 36px;
+        }
+
+        .title-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(5px, 1.5vw, 10px);
         }
 
         h1 {
             margin: 0;
             color: var(--title-color);
-            font-size: clamp(24px, 6vw, 32px);
+            font-size: clamp(20px, 5.2vw, 32px);
             font-weight: 900;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         .cloud-deco {
-            width: clamp(40px, 9vw, 60px);
-            height: clamp(18px, 4.5vw, 28px);
+            width: clamp(32px, 7.5vw, 55px);
+            height: clamp(14px, 3.5vw, 24px);
+        }
+
+        /* 타이틀 맨 끝쪽(1팀 차례 위쪽)에 배치된 컴팩트 초대장 버튼 */
+        .btn-invite-top {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #2d8a4e;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: clamp(4px, 1.1vw, 7px) clamp(7px, 1.6vw, 13px);
+            font-size: clamp(11px, 2.4vw, 13px);
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 6px rgba(45, 138, 78, 0.25);
+            white-space: nowrap;
+            transition: transform 0.1s ease;
+        }
+
+        .btn-invite-top:active {
+            transform: translateY(-50%) scale(0.95);
         }
 
         #setup-screen {
@@ -98,7 +133,7 @@
         }
 
         #setup-screen h2 {
-            font-size: clamp(19px, 5vw, 22px);
+            font-size: clamp(18px, 4.8vw, 22px);
             color: var(--title-color);
             margin-bottom: 18px;
             font-weight: 800;
@@ -126,26 +161,14 @@
             transform: scale(0.98);
         }
 
-        .btn-invite {
-            background: #2d8a4e;
-            font-size: 15px;
-            padding: 10px 18px;
-            margin-top: 10px;
-            box-shadow: 0 3px 8px rgba(45, 138, 78, 0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
         .btn-large {
-            font-size: clamp(18px, 4.8vw, 21px);
-            padding: 12px 20px;
+            font-size: clamp(14px, 3.6vw, 20px);
+            padding: clamp(9px, 2vw, 13px);
             background: var(--throw-btn-bg);
-            box-shadow: 0 4px 0 var(--throw-btn-shadow);
+            box-shadow: 0 3px 0 var(--throw-btn-shadow);
             color: #fff;
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 900;
             margin-top: 6px;
@@ -156,7 +179,7 @@
 
         .btn-large:active:not(:disabled) {
             transform: translateY(2px);
-            box-shadow: 0 2px 0 var(--throw-btn-shadow);
+            box-shadow: 0 1px 0 var(--throw-btn-shadow);
         }
 
         .btn-large:disabled {
@@ -175,39 +198,43 @@
             position: relative;
         }
 
+        /* 핸드폰에서도 꺾이지 않고 옆으로 나란히 배치 */
         .game-layout {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: row;
+            flex-wrap: nowrap;
             justify-content: center;
             align-items: flex-start;
-            gap: 20px;
+            gap: clamp(6px, 1.6vw, 18px);
             width: 100%;
         }
 
-        /* 반응형 유동 말판 래퍼 */
+        /* 좌측: 유동적으로 줄어드는 말판 영역 */
         #board-wrapper {
+            flex: 1 1 52%;
+            min-width: 0;
+            max-width: 470px;
             background: #ffffff;
-            padding: clamp(6px, 2vw, 12px);
-            border-radius: 20px;
+            padding: clamp(4px, 1.2vw, 10px);
+            border-radius: clamp(12px, 2.5vw, 20px);
             box-shadow: 0 8px 25px rgba(122, 108, 93, 0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            max-width: 100%;
-            margin-bottom: 50px; /* 결승선 공간 확보 */
+            position: relative;
+            margin-bottom: clamp(35px, 8vw, 48px);
         }
 
-        /* 화면 폭에 맞춰 1:1 정사각형으로 자동 축소/확대 */
         #board-container {
             position: relative;
-            width: min(92vw, 470px);
-            height: min(92vw, 470px);
+            width: 100%;
+            aspect-ratio: 1 / 1;
             background: var(--board-bg);
-            border: clamp(6px, 1.8vw, 10px) solid var(--board-frame);
+            border: clamp(4px, 1.4vw, 10px) solid var(--board-frame);
             outline: 2px solid var(--board-inner-line);
-            outline-offset: -5px;
-            border-radius: 14px;
+            outline-offset: -4px;
+            border-radius: clamp(8px, 1.8vw, 14px);
             touch-action: none;
         }
 
@@ -220,11 +247,10 @@
             pointer-events: none;
         }
 
-        /* 유동적 크기의 말판 노드 */
         .node {
             position: absolute;
-            width: clamp(20px, 5.8vw, 28px);
-            height: clamp(20px, 5.8vw, 28px);
+            width: clamp(16px, 4.8vw, 28px);
+            height: clamp(16px, 4.8vw, 28px);
             background: var(--node-small);
             border-radius: 50%;
             transform: translate(-50%, -50%);
@@ -239,21 +265,21 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: clamp(48px, 12vw, 62px);
-            height: clamp(48px, 12vw, 62px);
+            width: clamp(38px, 9.5vw, 62px);
+            height: clamp(38px, 9.5vw, 62px);
             border-radius: 50%;
             pointer-events: auto;
         }
 
         .node.corner, .node.center {
-            width: clamp(32px, 9vw, 44px);
-            height: clamp(32px, 9vw, 44px);
+            width: clamp(24px, 7vw, 44px);
+            height: clamp(24px, 7vw, 44px);
             background: var(--node-large);
         }
 
         .node.corner::before, .node.center::before {
-            width: clamp(58px, 14vw, 72px);
-            height: clamp(58px, 14vw, 72px);
+            width: clamp(44px, 11vw, 72px);
+            height: clamp(44px, 11vw, 72px);
         }
 
         .node-label {
@@ -266,7 +292,7 @@
             align-items: center;
             justify-content: center;
             font-weight: 500;
-            font-size: clamp(9px, 2.5vw, 11px);
+            font-size: clamp(8px, 2.2vw, 11px);
             color: rgba(255, 255, 255, 0.9);
             pointer-events: none;
             user-select: none;
@@ -275,40 +301,41 @@
         .node.corner .node-label,
         .node.center .node-label {
             font-weight: 600;
-            font-size: clamp(11px, 3vw, 13px);
+            font-size: clamp(9px, 2.5vw, 13px);
         }
 
         .finish-zone {
             position: absolute;
-            bottom: -45px;
-            right: 6px;
+            bottom: clamp(-36px, -7vw, -45px);
+            right: 4px;
             background: #52b77a;
             color: white;
-            padding: 6px 14px;
-            border-radius: 16px;
+            padding: clamp(4px, 1.2vw, 7px) clamp(8px, 2vw, 14px);
+            border-radius: 14px;
             font-weight: bold;
-            font-size: clamp(12px, 3.2vw, 14px);
+            font-size: clamp(10px, 2.6vw, 14px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: all 0.2s;
             z-index: 5;
             cursor: pointer;
+            white-space: nowrap;
         }
 
         .finish-zone::before {
             content: '';
             position: absolute;
-            top: -12px;
-            left: -12px;
-            right: -12px;
-            bottom: -12px;
-            border-radius: 20px;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 18px;
             pointer-events: auto;
         }
 
         .finish-zone.droppable-target,
         .node.droppable-target {
             background: #ffd15c !important;
-            box-shadow: 0 0 16px #ea580c;
+            box-shadow: 0 0 14px #ea580c;
             transform: translate(-50%, -50%) scale(1.22);
             z-index: 10;
         }
@@ -318,16 +345,15 @@
             transform: scale(1.06);
         }
 
-        /* 우측(모바일에서는 하단) 조작 패널 */
+        /* 우측: 유동적으로 줄어드는 조작 패널 영역 */
         #control-panel {
-            flex: 1;
-            min-width: 280px;
-            max-width: 470px;
-            width: 100%;
+            flex: 1 1 48%;
+            min-width: 0;
+            max-width: 440px;
             background: #fdfbf7;
-            padding: 14px 16px;
-            border-radius: 18px;
-            border: 3px solid var(--board-frame);
+            padding: clamp(6px, 1.8vw, 14px);
+            border-radius: clamp(12px, 2.5vw, 18px);
+            border: clamp(2px, 0.5vw, 3px) solid var(--board-frame);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -335,11 +361,11 @@
         }
 
         #turn-info {
-            font-size: clamp(17px, 4.5vw, 20px);
+            font-size: clamp(13px, 3.4vw, 19px);
             font-weight: 900;
-            margin-bottom: 8px;
-            padding: 7px 16px;
-            border-radius: 22px;
+            margin-bottom: 6px;
+            padding: clamp(5px, 1.2vw, 8px) clamp(10px, 2.5vw, 18px);
+            border-radius: 20px;
             color: white;
             background: var(--team-0);
             width: 100%;
@@ -350,13 +376,12 @@
 
         #yut-display-area {
             width: 100%;
-            min-height: 200px;
-            height: auto;
+            min-height: clamp(140px, 32vw, 210px);
             background: #ffffff;
             border: 2px solid var(--board-frame);
-            border-radius: 16px;
-            padding: 10px 12px;
-            margin-bottom: 8px;
+            border-radius: 14px;
+            padding: clamp(6px, 1.4vw, 10px);
+            margin-bottom: 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -365,24 +390,24 @@
 
         .yut-sticks {
             display: flex;
-            gap: clamp(8px, 2.5vw, 12px);
-            min-height: 100px;
+            gap: clamp(3px, 1.2vw, 10px);
+            min-height: clamp(70px, 16vw, 105px);
             perspective: 600px;
             align-items: center;
             justify-content: center;
         }
 
         .yut-stick {
-            width: clamp(34px, 8.5vw, 40px);
-            height: clamp(92px, 23vw, 108px);
-            border-radius: 14px;
+            width: clamp(24px, 5.8vw, 38px);
+            height: clamp(68px, 16vw, 104px);
+            border-radius: clamp(8px, 2vw, 14px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-evenly;
             font-weight: 900;
             position: relative;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
             transition: background 0.2s;
         }
 
@@ -393,7 +418,7 @@
 
         .yut-stick.round .x-mark {
             color: var(--yut-mark);
-            font-size: clamp(13px, 3.5vw, 15px);
+            font-size: clamp(9px, 2.2vw, 14px);
             line-height: 1;
             font-weight: 900;
         }
@@ -404,8 +429,8 @@
         }
 
         .black-dot {
-            width: clamp(11px, 2.8vw, 14px);
-            height: clamp(11px, 2.8vw, 14px);
+            width: clamp(9px, 2.2vw, 13px);
+            height: clamp(9px, 2.2vw, 13px);
             background-color: #222;
             border-radius: 50%;
             box-shadow: 0 1px 2px rgba(0,0,0,0.3);
@@ -413,7 +438,7 @@
 
         @keyframes spinYutIndividual {
             0% { transform: rotateY(0deg) translateY(0); }
-            50% { transform: rotateY(360deg) translateY(-15px); }
+            50% { transform: rotateY(360deg) translateY(-12px); }
             100% { transform: rotateY(720deg) translateY(0); }
         }
 
@@ -423,10 +448,10 @@
         .yut-stick.spin-4 { animation: spinYutIndividual 0.55s ease-in-out; }
 
         #result-text {
-            font-size: clamp(22px, 5.5vw, 26px);
+            font-size: clamp(16px, 4.2vw, 24px);
             font-weight: 900;
             color: #222222;
-            height: 30px;
+            height: clamp(20px, 4.5vw, 28px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -434,7 +459,7 @@
 
         #pending-moves-container {
             width: 100%;
-            min-height: 44px;
+            min-height: clamp(28px, 6vw, 42px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -442,33 +467,34 @@
         }
 
         .pending-title {
-            font-size: 11px;
+            font-size: clamp(9px, 2vw, 11px);
             color: #777;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             font-weight: 700;
+            text-align: center;
         }
 
         #pending-chips-area {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
         }
 
         .pending-placeholder {
-            font-size: 12px;
+            font-size: clamp(9px, 2vw, 11.5px);
             color: #b5a999;
             font-weight: 600;
             letter-spacing: -0.3px;
         }
 
         .move-chip {
-            padding: 4px 11px;
+            padding: 2px 7px;
             background: #ffffff;
-            border: 2px solid var(--board-inner-line);
-            border-radius: 16px;
-            font-size: 13px;
+            border: 1.5px solid var(--board-inner-line);
+            border-radius: 12px;
+            font-size: clamp(10px, 2.3vw, 12.5px);
             font-weight: 800;
             color: var(--title-color);
             cursor: pointer;
@@ -485,16 +511,16 @@
         #piece-wait-area {
             width: 100%;
             background: #ffffff;
-            padding: 12px 14px;
-            border-radius: 16px;
+            padding: clamp(6px, 1.6vw, 12px);
+            border-radius: 14px;
             border: 2px solid var(--board-frame);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         #piece-wait-area h4 {
-            margin: 0 0 8px 0;
+            margin: 0 0 5px 0;
             color: var(--title-color);
-            font-size: 12.5px;
+            font-size: clamp(10px, 2.2vw, 12.5px);
             text-align: center;
             font-weight: 800;
         }
@@ -503,7 +529,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 6px;
+            gap: 4px;
+            margin-bottom: 5px;
+            width: 100%;
         }
 
         .team-pieces:last-child {
@@ -512,28 +540,28 @@
 
         .team-label {
             font-weight: 900;
-            font-size: clamp(14px, 3.8vw, 15.5px);
+            font-size: clamp(11.5px, 2.6vw, 15px);
             color: #3a2e25;
-            min-width: 120px;
-            letter-spacing: -0.2px;
+            white-space: nowrap;
         }
 
         .pieces-list {
             display: flex;
-            gap: 8px;
+            gap: clamp(3px, 1vw, 8px);
             flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
         .piece {
-            width: clamp(32px, 8.5vw, 36px);
-            height: clamp(32px, 8.5vw, 36px);
+            width: clamp(22px, 5.5vw, 34px);
+            height: clamp(22px, 5.5vw, 34px);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 900;
             color: white;
-            font-size: clamp(13px, 3.8vw, 15px);
+            font-size: clamp(10px, 2.5vw, 14px);
             cursor: grab;
             position: relative;
             touch-action: none;
@@ -545,19 +573,19 @@
             transform: scale(1.15);
         }
 
-        .piece.team-0 { background: var(--team-0); box-shadow: 0 3px 0 var(--team-0-shadow); }
-        .piece.team-1 { background: var(--team-1); box-shadow: 0 3px 0 var(--team-1-shadow); }
-        .piece.team-2 { background: var(--team-2); box-shadow: 0 3px 0 var(--team-2-shadow); }
-        .piece.team-3 { background: var(--team-3); box-shadow: 0 3px 0 var(--team-3-shadow); }
+        .piece.team-0 { background: var(--team-0); box-shadow: 0 2px 0 var(--team-0-shadow); }
+        .piece.team-1 { background: var(--team-1); box-shadow: 0 2px 0 var(--team-1-shadow); }
+        .piece.team-2 { background: var(--team-2); box-shadow: 0 2px 0 var(--team-2-shadow); }
+        .piece.team-3 { background: var(--team-3); box-shadow: 0 2px 0 var(--team-3-shadow); }
 
         .node .piece {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: clamp(24px, 6.5vw, 34px);
-            height: clamp(24px, 6.5vw, 34px);
-            font-size: clamp(11px, 3vw, 14px);
+            width: clamp(18px, 4.8vw, 32px);
+            height: clamp(18px, 4.8vw, 32px);
+            font-size: clamp(9px, 2.4vw, 13px);
             z-index: 3;
         }
 
@@ -567,21 +595,21 @@
             right: -4px;
             background: #333;
             color: #fff;
-            font-size: 10px;
-            width: 16px;
-            height: 16px;
+            font-size: clamp(7.5px, 1.8vw, 10px);
+            width: clamp(11px, 2.6vw, 15px);
+            height: clamp(11px, 2.6vw, 15px);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid white;
+            border: 1.5px solid white;
             font-weight: 900;
         }
 
         #touch-drag-avatar {
             position: fixed;
-            width: 42px;
-            height: 42px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             color: white;
             font-weight: 900;
@@ -591,7 +619,7 @@
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%) scale(1.15);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
             border: 2px solid #fff;
             display: none;
         }
@@ -604,9 +632,9 @@
             background: rgba(45, 36, 30, 0.92);
             backdrop-filter: blur(4px);
             color: #fff;
-            padding: 14px 22px;
-            border-radius: 18px;
-            font-size: clamp(15px, 4vw, 18px);
+            padding: 12px 18px;
+            border-radius: 16px;
+            font-size: clamp(13px, 3.4vw, 17px);
             font-weight: 800;
             box-shadow: 0 8px 25px rgba(0,0,0,0.25);
             z-index: 100;
@@ -616,7 +644,7 @@
             border: 2px solid #ffd15c;
             white-space: pre-line;
             line-height: 1.45;
-            max-width: 90vw;
+            max-width: 88vw;
         }
 
         .modal-overlay {
@@ -636,7 +664,7 @@
             background: #ffffff;
             border: 4px solid var(--board-frame);
             border-radius: 22px;
-            padding: 24px 20px;
+            padding: 22px 18px;
             text-align: center;
             max-width: 420px;
             width: 92%;
@@ -650,60 +678,60 @@
         }
 
         .modal-title {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 900;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .modal-desc {
-            font-size: 14px;
+            font-size: 13.5px;
             color: #666;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             line-height: 1.4;
         }
 
         .rank-list-container {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 18px;
+            gap: 7px;
+            margin-bottom: 16px;
         }
 
         .rank-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 9px 14px;
-            border-radius: 14px;
+            padding: 8px 12px;
+            border-radius: 12px;
             background: #fdfbf7;
             border: 2px solid var(--board-frame);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
         }
 
         .rank-badge {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .rank-team-tag {
             color: white;
-            padding: 4px 11px;
+            padding: 3px 10px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 900;
         }
 
         .btn-continue {
             background: #2d8a4e;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .btn-restart {
             background: var(--throw-btn-bg);
-            box-shadow: 0 4px 0 var(--throw-btn-shadow);
-            margin-bottom: 8px;
+            box-shadow: 0 3px 0 var(--throw-btn-shadow);
+            margin-bottom: 6px;
         }
         .btn-setup {
             background: var(--title-color);
@@ -712,42 +740,48 @@
         .invite-card {
             background: #fdfaf5;
             border: 2px dashed #cfc2af;
-            border-radius: 14px;
+            border-radius: 12px;
             padding: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             text-align: left;
-            font-size: 13.5px;
+            font-size: 13px;
             color: #444;
-            line-height: 1.55;
+            line-height: 1.5;
         }
 
         .invite-url-box {
             font-family: monospace;
             background: #fff;
-            padding: 7px 9px;
+            padding: 6px 8px;
             border-radius: 8px;
             border: 1px solid #ddd;
-            margin-top: 8px;
+            margin-top: 6px;
             color: #1a56db;
             word-break: break-all;
-            font-size: 12.5px;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
 
+    <!-- 헤더: 중앙 타이틀 + 우측 끝(1팀 차례 위)에 초대장 버튼 -->
     <div class="header-container">
-        <svg class="cloud-deco" viewBox="0 0 100 45">
-            <path d="M10 28 C 5 20, 12 10, 28 14 C 36 5, 56 5, 66 16 C 76 12, 90 16, 92 26 C 94 36, 78 38, 65 35 C 50 39, 35 37, 24 33 C 14 36, 8 34, 10 28 Z" fill="#fcf9f2" stroke="#d5c6b0" stroke-width="2.5" stroke-linejoin="round"/>
-            <path d="M30 24 C 38 21, 48 25, 56 22" stroke="#d5c6b0" stroke-width="2" stroke-linecap="round" fill="none"/>
-        </svg>
+        <div class="title-inner">
+            <svg class="cloud-deco" viewBox="0 0 100 45">
+                <path d="M10 28 C 5 20, 12 10, 28 14 C 36 5, 56 5, 66 16 C 76 12, 90 16, 92 26 C 94 36, 78 38, 65 35 C 50 39, 35 37, 24 33 C 14 36, 8 34, 10 28 Z" fill="#fcf9f2" stroke="#d5c6b0" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M30 24 C 38 21, 48 25, 56 22" stroke="#d5c6b0" stroke-width="2" stroke-linecap="round" fill="none"/>
+            </svg>
 
-        <h1>신나는 윷놀이</h1>
+            <h1>신나는 윷놀이</h1>
 
-        <svg class="cloud-deco" viewBox="0 0 100 45">
-            <path d="M90 28 C 95 20, 88 10, 72 14 C 64 5, 44 5, 34 16 C 24 12, 10 16, 8 26 C 6 36, 22 38, 35 35 C 50 39, 65 37, 76 33 C 86 36, 92 34, 90 28 Z" fill="#fcf9f2" stroke="#d5c6b0" stroke-width="2.5" stroke-linejoin="round"/>
-            <path d="M70 24 C 62 21, 52 25, 44 22" stroke="#d5c6b0" stroke-width="2" stroke-linecap="round" fill="none"/>
-        </svg>
+            <svg class="cloud-deco" viewBox="0 0 100 45">
+                <path d="M90 28 C 95 20, 88 10, 72 14 C 64 5, 44 5, 34 16 C 24 12, 10 16, 8 26 C 6 36, 22 38, 35 35 C 50 39, 65 37, 76 33 C 86 36, 92 34, 90 28 Z" fill="#fcf9f2" stroke="#d5c6b0" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M70 24 C 62 21, 52 25, 44 22" stroke="#d5c6b0" stroke-width="2" stroke-linecap="round" fill="none"/>
+            </svg>
+        </div>
+
+        <!-- 1팀 차례 위쪽, 타이틀 맨 끝쪽의 아담한 초대장 버튼 -->
+        <button class="btn-invite-top" onclick="openInviteModal()">💌 초대장</button>
     </div>
 
     <!-- 팀 선택 화면 -->
@@ -757,16 +791,16 @@
             <button class="btn" onclick="selectTeams(2)">2개 팀</button>
             <button class="btn" onclick="selectTeams(3)">3개 팀</button>
             <button class="btn" onclick="selectTeams(4)">4개 팀</button>
-            <button class="btn btn-invite" onclick="openInviteModal()">💌 친구에게 초대장 보내기</button>
         </div>
     </div>
 
-    <!-- 인게임 메인 화면 -->
+    <!-- 인게임 메인 화면 (핸드폰에서도 좌우 배치) -->
     <div id="game-container">
         <div id="toast-popup"></div>
         <div id="touch-drag-avatar"></div>
 
         <div class="game-layout">
+            <!-- 좌측: 유동적 축소 윷판 -->
             <div id="board-wrapper">
                 <div id="board-container">
                     <svg id="board-svg" viewBox="0 0 450 450"></svg>
@@ -774,6 +808,7 @@
                 </div>
             </div>
 
+            <!-- 우측: 조작 및 대기실 패널 -->
             <div id="control-panel">
                 <div id="turn-info">1팀 차례</div>
 
@@ -800,7 +835,6 @@
                 </div>
 
                 <button class="btn btn-large" id="throw-btn" onclick="throwYut()">윷 던지기 🎲</button>
-                <button class="btn btn-invite" style="margin-top: 8px;" onclick="openInviteModal()">💌 친구 초대하기</button>
             </div>
         </div>
     </div>
@@ -827,11 +861,11 @@
             
             <div class="invite-card">
                 🎲 <strong>신나는 전통 윷놀이에 초대합니다!</strong><br>
-                다운로드나 설치 없이 스마트폰, 태블릿, PC 인터넷 창에서 바로 함께 플레이할 수 있습니다.
+                설치 없이 스마트폰, 태블릿, PC 인터넷 창에서 바로 함께 플레이할 수 있습니다.
                 <div class="invite-url-box">https://v1520152v.github.io/yut/</div>
             </div>
 
-            <button class="btn btn-invite" style="width: 100%; margin-bottom: 8px;" onclick="copyInviteMessage()">📋 초대 문구 & 링크 복사하기</button>
+            <button class="btn" style="background: #2d8a4e; width: 100%; margin-bottom: 8px;" onclick="copyInviteMessage()">📋 초대 문구 & 링크 복사하기</button>
             <button class="btn" style="background: #e69138; width: 100%; margin-bottom: 8px;" onclick="shareNative()">📲 카톡 / 메신저로 공유하기</button>
             <button class="btn btn-setup" style="width: 100%;" onclick="closeInviteModal()">닫기</button>
         </div>
@@ -981,7 +1015,6 @@
         let remainingThrows = 1;
         let teamRankings = [];
 
-        // 450x450 기준 대칭 좌표 (반응형 % 계산용 기준)
         const nodePositions = [
             {x: 420, y: 420}, {x: 420, y: 342}, {x: 420, y: 264}, {x: 420, y: 186}, {x: 420, y: 108},
             {x: 420, y: 30},  {x: 342, y: 30},  {x: 264, y: 30},  {x: 186, y: 30},  {x: 108, y: 30},
@@ -1031,7 +1064,6 @@
             board.ondragover = (e) => e.preventDefault();
             board.ondrop = (e) => onBoardContainerDrop(e);
 
-            // 유동적 백분율(%) 좌표 배치
             nodePositions.forEach((pos, idx) => {
                 const node = document.createElement('div');
                 node.className = 'node';
@@ -1097,7 +1129,6 @@
             renderPendingChips();
         }
 
-        // 반응형 화면 크기에 맞춰 정규화된 좌표 탐색
         function findClosestTargetFromCoords(clientX, clientY) {
             const board = document.getElementById('board-container');
             const rect = board.getBoundingClientRect();
