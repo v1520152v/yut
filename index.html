@@ -760,11 +760,7 @@
             font-size: 12px;
         }
 
-        /* ============================================================
-           [가로 모드(Landscape) 전용 최적화]
-           세로 높이가 낮은 스마트폰 가로모드(높이 520px 이하)에서도
-           스크롤 없이 한 화면에 윷 던지기 버튼까지 완전히 노출
-        ============================================================ */
+        /* 가로 모드(Landscape) 전용 최적화 */
         @media (max-height: 520px) {
             body {
                 padding: 2px 8px;
@@ -807,7 +803,6 @@
                 border-width: 4px;
             }
 
-            /* 가로모드에서 결승선이 아래로 잘리지 않도록 말판 내부 우하단에 배치 */
             .finish-zone {
                 bottom: 4px;
                 right: 4px;
@@ -923,7 +918,7 @@
 </head>
 <body>
 
-    <!-- 상단 헤더: 아래 우측 박스 끝선에 정확히 맞춰진 초대장 버튼 -->
+    <!-- 상단 헤더 -->
     <div class="header-container">
         <div class="title-inner">
             <svg class="cloud-deco" viewBox="0 0 100 45">
@@ -1464,6 +1459,27 @@
                 }, 200);
             }, 500);
         }
+
+        /* 스페이스바 단축키 이벤트 리스너 */
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.key === ' ') {
+                const gameContainer = document.getElementById('game-container');
+                const gameOverModal = document.getElementById('game-over-modal');
+                const inviteModal = document.getElementById('invite-modal');
+
+                // 게임 진행 중이고 모달 창이 열려있지 않을 때만 작동
+                if (gameContainer && gameContainer.style.display !== 'none' &&
+                    (!gameOverModal || gameOverModal.style.display === 'none') &&
+                    (!inviteModal || inviteModal.style.display === 'none')) {
+                    
+                    e.preventDefault(); // 스페이스바 스크롤 방지
+                    const throwBtn = document.getElementById('throw-btn');
+                    if (throwBtn && !throwBtn.disabled && !isThrowing && remainingThrows > 0) {
+                        throwYut();
+                    }
+                }
+            }
+        });
 
         function renderPendingChips() {
             const area = document.getElementById('pending-chips-area');
